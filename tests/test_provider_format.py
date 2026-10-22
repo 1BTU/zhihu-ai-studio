@@ -28,6 +28,10 @@ class FormatTests(unittest.TestCase):
   result,repairs=providers.parse_model_json(json.dumps(value)+'}')
   self.assertEqual(result['verdict'],'revise');self.assertEqual(result['issues'],['还需核实'])
   self.assertEqual(result['article']['content_mode'],'hot');self.assertEqual(result['article']['blocks'],value['article']['blocks']);self.assertEqual(len(repairs),2)
+ def test_premature_root_closure_rejoins_without_changing_review(self):
+  result,repairs=providers.parse_model_json('{"verdict":"revise","issues":["核实"]},"article":{"title":"原稿"}}')
+  self.assertEqual(result,{'verdict':'revise','issues':['核实'],'article':{'title':'原稿'}})
+  self.assertEqual(len(repairs),1)
  def test_ambiguous_or_truncated_json_is_not_repaired(self):
   for raw in ['{"answer":"one"}{"answer":"two"}','{"answer":"a","answer":"b"}','{"answer":"incomplete"','{"answer":"ok"} explanation']:
    with self.subTest(raw=raw),self.assertRaises(ValueError):providers.parse_model_json(raw)

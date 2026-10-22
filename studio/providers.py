@@ -102,6 +102,14 @@ def parse_model_json(content):
  decoder=json.JSONDecoder(object_pairs_hook=unique)
  result,end=decoder.raw_decode(clean)
  tail=clean[end:].strip()
+ if isinstance(result,dict) and re.match(r'^,\s*"[^"]+"\s*:',tail):
+  # The model closed the root before another property; rejoin only if fully parseable.
+  candidate=clean[:end-1]+clean[end:]
+  joined,joined_end=decoder.raw_decode(candidate)
+  joined_tail=candidate[joined_end:].strip()
+  if not joined_tail or re.fullmatch(r'}{1,3}',joined_tail):
+   result=joined;clean=candidate;end=joined_end;tail=joined_tail
+   repairs.append('移除顶层对象后续字段前提前闭合的右花括号')
  if tail:
   if isinstance(result,dict) and re.fullmatch(r'}{1,3}',tail):
    repairs.append('移除完整顶层对象之后多余的右花括号')
