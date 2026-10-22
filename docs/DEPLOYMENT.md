@@ -69,7 +69,7 @@ Wiki 静态输出默认在 `site/wiki/`，由 Nginx 的 `auth_request` 检查同
 .venv/bin/python "$NEWS_FETCHER" --source sspai,hackernews --limit 3 --no-save
 ```
 
-当前聊天流程也会准备热点上下文，因此开始完整写作前需要配置该采集依赖。写作规则另参考 `zhihu-converter` Skill；这些外部 Skill 的安装、版本和授权由使用者管理，本仓库不打包它们。
+当前聊天流程也会准备热点上下文，因此开始完整写作前需要配置该采集依赖。排版使用仓库内 `skills/zhihu-converter/SKILL.md`，包含按题材分段、平台输出与修改复核规则；无需另外安装同名旧版 skill。新闻采集 skill 仍是由使用者管理的外部依赖。
 
 ## 4. 写作参考库
 
