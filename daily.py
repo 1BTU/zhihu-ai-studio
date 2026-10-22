@@ -286,7 +286,10 @@ def run_locked(opts):
         state['notified']=False;save(state_path,state)
     if completed_for_today(state):
         print('今日已完成并通知，跳过。'); return
+    if state.get('error'):
+        state.setdefault('failures',[]).append({'error':state.pop('error'),'failed_at':state.pop('failed_at',None)})
     save(state_path,state)
+    report_progress('恢复每日任务' if state.get('failures') else '启动每日任务','重新核实材料后继续，已有发布结果不会重复提交')
     try:
         data=json.loads((RUN/'articles.json').read_text()) if (RUN/'articles.json').exists() else generate()
         if len(data['articles']) != CFG['count']:
