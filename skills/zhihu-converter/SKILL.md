@@ -2,12 +2,20 @@
 name: zhihu-converter
 description: 按故事、热点评论、科技产品分析、教程或随笔的内容类型，为知乎文章整理段落、层次与重点标记；用于写作后的排版、修改和排版审核，不单独授权发布。
 metadata:
-  version: '2.0.0'
+  version: '2.2.0'
 ---
 
 # 按内容类型整理知乎文章
 
 先判断主类型、读者目的和目标发布格式，再决定如何分段与强调。混合文章按局部内容调整，不把一种平台风格套到所有题材。
+
+## 选题与体裁
+
+写作或审稿时先读 [references/editorial-diversity.md](references/editorial-diversity.md)，按读者收益选择生活故事、解释、作品、经验或热点，不默认争议和批判。仅排版不扩展选题。
+
+## 观点形成
+
+热点、娱乐、民生与科技观点稿在确定立意前，先按 [references/audience-discussion.md](references/audience-discussion.md) 查阅真实讨论和不同作者观点。观点要回应可追溯的争议，不能仅凭模型想象读者心理或预设道德结论。仅排版任务不因此扩展为重写。
 
 ## 工作方式
 

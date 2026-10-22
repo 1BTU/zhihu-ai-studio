@@ -1,7 +1,7 @@
 """Server-side model registry and bounded, read-only research tools."""
 import json,pathlib,threading,re,time,socket,ipaddress,urllib.parse,hashlib,os
-import requests,jsonschema
 import runtime
+import requests,jsonschema
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 from streaming import PublicEvents
@@ -78,7 +78,7 @@ def tool(name,args,folder):
   allowed={x.resolve() for x in folder.glob('*.json') if x.name not in ('models.json','auth.json') and not x.name.endswith('.research.json')}
   allowed.update(x.resolve() for x in (ROOT/'writing-wiki/wiki').rglob('*.md'));allowed.add((ROOT/'writing-wiki/README.md').resolve())
   allowed.update([runtime.SKILLS/'news-aggregator-skill/SKILL.md',runtime.SKILLS/'zhihu-converter/SKILL.md'])
-  allowed.update((ROOT/'skills/zhihu-converter'/name).resolve() for name in ('SKILL.md','references/content-profiles.md','references/platform-and-review.md','references/sources.md'))
+  allowed.update((ROOT/'skills/zhihu-converter'/name).resolve() for name in ('SKILL.md','references/content-profiles.md','references/platform-and-review.md','references/sources.md','references/audience-discussion.md','references/editorial-diversity.md'))
   p=next((x for x in candidates if x in allowed),None)
   if p is None:raise ValueError('只允许读取本任务资料与写作知识库')
   return p.read_text()

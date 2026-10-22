@@ -167,6 +167,14 @@
               "enum": [
                 "fiction"
               ]
+            },
+            "content_mode": {
+              "type": "string",
+              "enum": [
+                "hot",
+                "evergreen",
+                "fiction"
+              ]
             }
           },
           "required": [
@@ -177,7 +185,8 @@
             "blocks",
             "sources",
             "tags",
-            "writing_plan"
+            "writing_plan",
+            "content_mode"
           ]
         },
         {

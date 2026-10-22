@@ -96,6 +96,7 @@ def authenticate():
 def article_fingerprint(article):
     fields = ('genre','title','topic_key','category','event_date','blocks','sources','tags','writing_plan','body')
     value = {k: article.get(k) for k in fields if k!='genre' or article.get('genre')}
+    if article.get('content_mode'):value['content_mode']=article['content_mode']
     if article.get('illustrations'):value['illustrations']=[{k:im.get(k) for k in ('hosted_sha256','before_block','caption')} for im in article['illustrations']]
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
@@ -112,10 +113,11 @@ def validate_article(a, require_recent=True):
     date_match = re.fullmatch(r'\d{4}-\d{2}-\d{2}', a['event_date'])
     if not date_match: raise RuntimeError('选题日期格式不合要求')
     age = (TODAY-dt.date.fromisoformat(a['event_date'])).days
-    if age < 0 or require_recent and age > 3: raise RuntimeError('选题新闻日期不合要求')
+    if a.get('content_mode','hot') not in ('hot','evergreen','fiction'): raise RuntimeError('未知内容类型')
+    if age < 0 or (require_recent and a.get('content_mode','hot')=='hot' and age > 3): raise RuntimeError('选题新闻日期不合要求')
     body = '\n'.join(b['text'] for b in a['blocks'])
     if len(body)<800: raise RuntimeError('文章正文不足800字')
-    fiction=a.get('genre')=='fiction'
+    fiction=a.get('genre')=='fiction' or a.get('content_mode')=='fiction'
     if fiction and not any('虚构' in b['text'] for b in a['blocks'][:2]):raise RuntimeError('原创故事须在开头明确标注虚构')
     if not fiction and len({s['url'] for s in a['sources']}) < 2: raise RuntimeError('文章核实来源不足')
     if any(not s['url'].startswith('https://') for s in a['sources']): raise RuntimeError('来源地址无效')
@@ -135,15 +137,18 @@ def review_article(article, index, require_recent=True, run_agent=None):
             f'热点记录：{RUN}/hotspots.json。历史选题：{RUN}/history.json。'
             f'合格范文上下文：{RUN}/writing-context.json。当前第 {round_no} 轮。')
         prompt += layout.review_note(current)
+        if CFG.get('editorial_lane'):prompt += '\n本次选题方向：'+CFG['editorial_lane']+'。审核稿件是否符合分工，不用换一个类别标签冒充新题材；若明显偏题且无法保留topic_key修复，拒绝并说明。'
         if not require_recent:
             prompt += '\n本次是用户对话指定选题，允许长期主题，不强制72小时新进展；日期仍须真实，不把旧事包装成新闻。其余审稿要求不变。'
-        fiction=article.get('genre')=='fiction'
+        fiction=article.get('genre')=='fiction' or article.get('content_mode')=='fiction'
         if fiction:prompt+='\n这是明确标注虚构的原创情感故事。以人物一致性、情节因果、原创性、避免影射真人为审稿标准，不要求新闻时效和公开事件来源，sources可为空。保留首段虚构标识和范文迁移计划。'
         result = (run_agent or agent)(prompt, output, ROOT/('fiction-review-schema.json' if fiction else 'review-schema.json'))
         if result['verdict'] == 'reject':
             raise RuntimeError('审稿未通过，停止发布：'+'；'.join(result['issues']))
         revised = result.get('article')
         if not revised: raise RuntimeError('审稿没有返回完整文章')
+        if article.get('content_mode') and revised.get('content_mode') != article['content_mode']:
+            raise RuntimeError('审稿不得悄悄替换内容类型')
         if revised['topic_key'] != article['topic_key']:
             raise RuntimeError('审稿不得悄悄替换选题')
         if fiction:revised['genre']='fiction'
@@ -213,12 +218,14 @@ def generate():
     if cached and cached.get('status','ready') == 'ready':
         data = cached
     else:
-        report_progress('采集热点', '核对当前热点与事件时间')
+        report_progress('采集选题线索', '热点与常青内容分型选题')
         fetched = command([runtime.PYTHON,runtime.NEWS_FETCHER,
                            '--source',CFG['sources'],'--limit','15','--no-save'], timeout=240)
         (RUN/'fetch.stderr.log').write_text(fetched.stderr)
-        if fetched.returncode: raise RuntimeError('热点采集脚本失败')
-        raw = json.loads(fetched.stdout)
+        if fetched.returncode:
+            raw = []  # Hot feeds are optional leads; evergreen research can still proceed.
+        else:
+            raw = json.loads(fetched.stdout)
         save(RUN/'hotspots.json', {'collected_at':dt.datetime.now(ZoneInfo(CFG['timezone'])).isoformat(),'items':raw})
         report_progress('知识库准备', '刷新互动数据与合格范文')
         refreshed=command([runtime.PYTHON,str(ROOT/'wiki.py'),'refresh'],timeout=240)
@@ -230,6 +237,7 @@ def generate():
         prompt = (ROOT/'daily-prompt.txt').read_text() + f'\n北京时间今天是 {TODAY}。本次只生成 {CFG["count"]} 篇。本次采集文件：{RUN}/hotspots.json。最近14天历史：{RUN}/history.json。\n本次通过互动门槛的参考卡及规则：{RUN}/writing-context.json。'
         if 'long' in CFG.get('article_layout',[]) and CFG['count']==3:prompt+='\n本批次为一篇长文、两篇短文。第一篇先输出1000–1600字的可靠基础稿，选题必须足以支撑万字深度论证或完整故事，后续会独立分节扩写。第二、三篇直接输出1000–1600字完整短文。不要在一次输出中生成三篇长文。'
         if CFG.get('article_layout') and all(x=='short' for x in CFG['article_layout']):prompt+='\n本次全部为完整短文，每篇正文1000–1600字，禁止扩写成长篇。'
+        prompt += '\n本次时段方向：'+CFG.get('editorial_lane','三篇时依次为生活关系故事、解释作品实用、灵活；单篇按用户要求或历史缺口选择')+'。在report记录读者收益与选题类型。热点采集失败或无合适热点时改查常青资料，不编造。'
         report_progress('选题与初稿', 'AI核实来源、检索范文并撰写文章')
         col=selected_daily_column()
         if col:prompt+='\n本次专栏要求（优先遵守定位和人物资料）：'+json.dumps(col,ensure_ascii=False)
@@ -238,14 +246,15 @@ def generate():
         data = agent(prompt, generated_path, ROOT/('fiction-daily-schema.json' if fiction else 'daily-schema.json'))
     articles = data.get('articles',[])
     (RUN/'hotspots-report.md').write_text(data.get('report',''))
-    if data.get('status','ready') != 'ready': raise RuntimeError('热点核实材料不足，未强行凑稿；详见来源报告')
+    if data.get('status','ready') != 'ready': raise RuntimeError('选题材料不足，未强行凑稿；详见来源报告')
     if len(articles) != CFG['count']: raise RuntimeError('未生成足够文章，不能标记完成')
     if len({a['title'] for a in articles}) != CFG['count'] or len({a['topic_key'] for a in articles}) != CFG['count']:
         raise RuntimeError('文章选题或标题重复')
     reviewed = []
     for index,a in enumerate(articles,1):
         col=selected_daily_column()
-        if col and col['config'].get('genre')=='fiction':a['genre']='fiction'
+        if col and col['config'].get('genre')=='fiction':a['genre']='fiction';a['content_mode']='fiction'
+        if a.get('content_mode')=='fiction':a['genre']='fiction'
         layout=CFG.get('article_layout',[])
         if layout and layout[index-1]=='long':
             import longform
