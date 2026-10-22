@@ -122,7 +122,7 @@ def validate_article(a, require_recent=True):
 
 def review_article(article, index, require_recent=True, run_agent=None):
     """A separate editor pass must approve the exact final text before upload."""
-    import longform
+    import longform,layout
     if longform.words(article)>=10000:return longform.review(sys.modules[__name__],article,index,require_recent,run_agent)
     current = copy.deepcopy(article)
     for round_no in range(1, CFG['review_max_rounds']+1):
@@ -134,6 +134,7 @@ def review_article(article, index, require_recent=True, run_agent=None):
             f'\n北京时间今天为 {TODAY}。待审核文章：{source}。'
             f'热点记录：{RUN}/hotspots.json。历史选题：{RUN}/history.json。'
             f'合格范文上下文：{RUN}/writing-context.json。当前第 {round_no} 轮。')
+        prompt += layout.review_note(current)
         if not require_recent:
             prompt += '\n本次是用户对话指定选题，允许长期主题，不强制72小时新进展；日期仍须真实，不把旧事包装成新闻。其余审稿要求不变。'
         fiction=article.get('genre')=='fiction'

@@ -55,6 +55,6 @@ def snapshot(db):
   m=c.get('metrics',{});a=c.get('analysis',{})
   cards.append({'id':c['id'],'title':c['title'],'url':c['url'],'platform':c['platform'],'tags':c.get('tags',[]),
                 'likes':m.get('likes'),'comments':m.get('comments'),'observed_at':m.get('observed_at'),
-                'analysis':{k:a.get(k) for k in ['开头','推进','证据','结尾','可迁移','不可迁移','反馈解释假设','适用限制'] if a.get(k)}})
+                'analysis':{k:a.get(k) for k in ['开头','推进','证据','结尾','可迁移','不可迁移','反馈解释假设','适用限制','段落排版'] if a.get(k)}})
  return {'mode':'guest','can_use_ai':False,'profile_url':PROFILE,'author':'leon鸣','articles':articles,'references':cards,
          'policy':{'rule':'优先筛选有可核验互动反馈的样本，阅读全文后分析写法。互动数据提供参考，不能证明文章受欢迎的唯一原因。','metric_max_age_days':wiki.POLICY.get('metric_max_age_days')}}

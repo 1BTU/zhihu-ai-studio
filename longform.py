@@ -46,6 +46,7 @@ def review(d,article,index,require_recent=True,runner=None):
   indexed=copy.deepcopy(current);indexed['blocks']=[dict(b,index=i) for i,b in enumerate(current['blocks'])];d.save(source,indexed)
   output=d.RUN/f'review-{index}-round-{round_no}-patch.json'
   prompt=(d.ROOT/'review-prompt.txt').read_text()+f'\n本次是长文整体审核。完整正文 {source}，完整热点与范文资料在当前任务目录。长文必须保留10000汉字以上，不适用短文字数和最多3小标题要求。逐节核对全篇，特别检查重复灌水、前后矛盾、事实来源和论点推进。只返回schema规定的精确段落修改，index必须使用输入段落自带的index，不得自行估数；original必须逐字复制该段完整原文，text是该段完整可发布的新正文，不得写入审稿说明、issues、占位符或创作过程。无改动则changes为空。issues只列应用本轮修改后仍然存在的问题，不重复列已修复项。不输出全文。修改较多可返回revise，但必须给出本轮实际修改。'
+  prompt+=__import__('layout').review_note(current)
   if not require_recent:prompt+=' 用户指定选题，不强制72小时时效。'
   if article.get('genre')=='fiction':prompt+=' 原创虚构故事按人物、情节因果和时间线审核，不要求公开事件来源。'
   value=run(prompt,output,schema)
