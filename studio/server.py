@@ -7,7 +7,7 @@ ROOT=pathlib.Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import daily,wiki,runtime
 sys.path.insert(0,str(pathlib.Path(__file__).parent))
 from streaming import run_agent as realtime_agent
-import auth,providers,domain,feedback
+import auth,providers,domain,feedback,guest
 os.umask(0o077)
 DATA=ROOT/'private/studio';DATA.mkdir(parents=True,exist_ok=True)
 DB=DATA/'studio.sqlite3';FILES=pathlib.Path(__file__).parent
@@ -348,6 +348,20 @@ class Handler(BaseHTTPRequestHandler):
  def do_GET(self):
   try:
    path=urlparse(self.path).path
+   if path in ('/guest','/guest/','/guest.css','/guest.js'):
+    name={'/guest':'guest.html','/guest/':'guest.html','/guest.css':'guest.css','/guest.js':'guest.js'}[path]
+    return self.reply((FILES/name).read_bytes(),ctype=mimetypes.guess_type(name)[0]+'; charset=utf-8')
+   if path=='/api/guest':return self.reply(guest.snapshot(DB))
+   if path.startswith('/api/guest/article/'):
+    aid=path.removeprefix('/api/guest/article/')
+    if not re.fullmatch(r'[a-zA-Z0-9_-]{1,100}',aid):return self.reply({'error':'文章不存在'},404)
+    value=guest.article(DB,aid)
+    return self.reply(value if value else {'error':'文章未公开'},200 if value else 404)
+   if path.startswith('/api/guest/image/'):
+    match=re.fullmatch(r'/api/guest/image/([a-zA-Z0-9_-]{1,100})/(\d{1,3})',path)
+    target=guest.image_path(DB,match[1],int(match[2])) if match else None
+    if not target:return self.reply({'error':'图片未公开'},404)
+    return self.reply(target.read_bytes(),ctype=mimetypes.guess_type(target.name)[0])
    if path=='/api/auth/check':return self.reply({'authenticated':auth.valid(self.headers)},200 if auth.valid(self.headers) else 401)
    if path in ('/login','/login/','/login.js','/style.css'):
     name={'/login':'login.html','/login/':'login.html','/login.js':'login.js','/style.css':'style.css'}[path];return self.reply((FILES/name).read_bytes(),ctype=mimetypes.guess_type(name)[0]+'; charset=utf-8')
@@ -398,6 +412,7 @@ class Handler(BaseHTTPRequestHandler):
    limit=6*1024*1024 if route=='/api/feedback/upload' else 2*1024*1024 if route=='/api/chat' else 50000
    if not 0<size<=limit:return self.reply({'error':'请求大小不合要求'},400)
    p=json.loads(self.rfile.read(size));route=urlparse(self.path).path
+   if route.startswith('/api/guest'):return self.reply({'error':'当前为访客模式，仅可浏览公开内容，无法调用 AI 或修改内容'},403)
    if route=='/api/auth/login':
     value=auth.login(str(p.get('username',''))[:100],str(p.get('password',''))[:1000],self.headers.get('X-Real-IP',self.client_address[0]));self.send_response(200);self.send_header('Set-Cookie',auth.cookie(value));self.send_header('Content-Type','application/json');self.end_headers();self.wfile.write(b'{"ok":true}');return
    if not auth.valid(self.headers):return self.reply({'error':'请重新登录'},401)
