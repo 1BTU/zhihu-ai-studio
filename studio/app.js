@@ -115,15 +115,15 @@ function renderSchedule(){
  for(const slot of plan.slots){n.append(el('p','',`${slot.label} ${slot.start.slice(11,16)}–${slot.end.slice(11,16)} · 随机发布时间 ${slot.publish_at.slice(11,16)} · ${slot.status==='pending'?'等待准备':slot.status==='ready'?'等待发布':operationLabels[slot.status]||slot.status}`));if(slot.error)n.append(el('p','job-error',slot.error));}box.append(n);}
 }
 function renderOperations(){
- const box=$('#operations-runs');if(!box)return;box.replaceChildren();
+ const box=$('#operations-runs');if(!box)return;const opened=new Set([...box.querySelectorAll('details[open][data-key]')].map(n=>n.dataset.key));const section=(key,cls='run')=>{const n=el('details',cls);n.dataset.key=key;n.open=opened.has(key);return n;};box.replaceChildren();
  for(const run of state.operations_runs||[]){const n=el('section','box');n.append(el('h2','',run.date+' · '+(operationLabels[run.status]||run.status)));
  if(run.observed_at)n.append(el('p','fine','巡查于 '+pretty(run.observed_at)));
  if(run.error)n.append(el('p','job-error',run.error));
  n.append(el('h3','',`内容与提交记录（${run.items?.length||0}）`));
- for(const item of run.items||[]){const d=el('details','run');d.append(el('summary','',`${item.kind==='answer'?'回答':'提问'} · ${item.title} · ${operationLabels[item.status]||item.status}`));for(const para of item.body.split('\n'))if(para)d.append(el('p','',para));d.append(el('p','fine',item.reason));if(item.url)d.append(link('查看已提交内容 ↗',item.url));else if(item.target_url)d.append(link('查看原问题 ↗',item.target_url));n.append(d);}
+ for(const item of run.items||[]){const d=section(run.date+':item:'+item.kind+':'+(item.target_url||item.title));d.append(el('summary','',`${item.kind==='answer'?'回答':'提问'} · ${item.title} · ${operationLabels[item.status]||item.status}`));for(const para of item.body.split('\n'))if(para)d.append(el('p','',para));d.append(el('p','fine',item.reason));if(item.url)d.append(link('查看已提交内容 ↗',item.url));else if(item.target_url)d.append(link('查看原问题 ↗',item.target_url));n.append(d);}
  if(!run.items?.length)n.append(el('p','fine','暂无已生成或已提交内容。'));
- const acts=el('details','run');acts.append(el('summary','',`发现活动与圆桌（${run.activities?.length||0}）`));for(const a of run.activities||[]){const p=el('p');p.append(link(a.title+' ↗',a.url));acts.append(p);}if(run.activity_overview){const more=el('details');more.append(el('summary','','活动中心现场记录'));for(const line of run.activity_overview.split('\n'))if(line)more.append(el('p','',line));acts.append(more);}n.append(acts);
- const qs=el('details','run');qs.append(el('summary','',`候选问题（${run.questions?.length||0}）`));for(const q of run.questions||[]){const p=el('p');p.append(link(q.title+' ↗',q.url));qs.append(p);}n.append(qs);
- if(run.report){const report=el('details','run');report.append(el('summary','','选题与审稿记录'),el('p','',run.report));n.append(report);}box.append(n);}
+ const acts=section(run.date+':activities');acts.append(el('summary','',`发现活动与圆桌（${run.activities?.length||0}）`));for(const a of run.activities||[]){const p=el('p');p.append(link(a.title+' ↗',a.url));acts.append(p);}if(run.activity_overview){const more=section(run.date+':activity-overview','');more.append(el('summary','','活动中心现场记录'));for(const line of run.activity_overview.split('\n'))if(line)more.append(el('p','',line));acts.append(more);}n.append(acts);
+ const qs=section(run.date+':questions');qs.append(el('summary','',`候选问题（${run.questions?.length||0}）`));for(const q of run.questions||[]){const p=el('p');p.append(link(q.title+' ↗',q.url));qs.append(p);}n.append(qs);
+ if(run.report){const report=section(run.date+':report');report.append(el('summary','','选题与审稿记录'),el('p','',run.report));n.append(report);}box.append(n);}
  if(!state.operations_runs?.length)box.append(el('p','empty','尚无巡查记录，每天 15:00 开始执行。'));
 }
