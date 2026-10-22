@@ -1,0 +1,5 @@
+import puppeteer from 'puppeteer';import fs from 'node:fs/promises';
+const url=process.argv[2];if(!/^https:\/\/zhuanlan.zhihu.com\/p\/\d+$/.test(url))throw Error('无效文章地址');
+const {name}=JSON.parse(await fs.readFile('private/active-profile.json','utf8'));if(!/^browser-profile(?:-\d+)?$/.test(name))throw Error('无效会话');
+const b=await puppeteer.launch({headless:true,userDataDir:`${process.cwd()}/private/${name}`,args:['--no-sandbox','--disable-dev-shm-usage']});
+try{const p=await b.newPage();await p.goto(url+'/edit',{waitUntil:'domcontentloaded',timeout:60000});if(/signin|signup/.test(p.url()))throw Error('登录已失效，请恢复登录');await p.waitForSelector('textarea[placeholder*="请输入标题"]',{timeout:20000});await p.waitForFunction(()=>document.querySelector('[contenteditable="true"]')?.innerText.trim(),{timeout:20000});console.log(JSON.stringify(await p.evaluate(()=>({title:document.querySelector('textarea[placeholder*="请输入标题"]').value,body:document.querySelector('[contenteditable="true"]').innerText}))));}finally{await b.close()}

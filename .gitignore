@@ -1,0 +1,20 @@
+# Accounts, keys, cookies, article bodies and runtime evidence stay local.
+private/
+artifacts/
+reports/
+articles/
+output/
+site/
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+*.sqlite*
+.env
+.env.*
+!.env.example
+daily-config.json
+*.log
+*.tar.gz
+*.pem
+*.key

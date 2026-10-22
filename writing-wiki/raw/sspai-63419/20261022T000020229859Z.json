@@ -1,0 +1,17 @@
+{
+  "platform": "sspai",
+  "url": "https://sspai.com/post/63419",
+  "observed_at": "2026-10-22T00:00:20.229578+00:00",
+  "verification": "live_public_html",
+  "metric_label": "充电",
+  "likes": 59,
+  "comments": 111,
+  "body_length": 7256,
+  "body_sha256": "aaa8ee11d575ef42c114e9a36da9327ee02ec0cedd1370b37601498c815968cd",
+  "evidence": {
+    "likes_selector": ".article__bar__action--charge .article__bar__action__count",
+    "comments_selector": ".article__bar__action--comment .article__bar__action__count",
+    "likes_text": "59",
+    "comments_text": "111"
+  }
+}

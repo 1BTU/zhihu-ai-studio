@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "metric_max_age_days": 14,
+  "min_references_per_article": 2,
+  "platforms": {
+    "zhihu": {"label": "知乎", "min_likes": 500, "min_comments": 50, "high_likes": 2000},
+    "sspai": {"label": "少数派", "min_likes": 100, "min_comments": 20, "high_likes": 300},
+    "smzdm": {"label": "什么值得买", "min_likes": 100, "min_comments": 30, "high_likes": 500},
+    "huxiu": {"label": "虎嗅", "min_likes": 100, "min_comments": 30, "high_likes": 500},
+    "36kr": {"label": "36氪", "min_likes": 100, "min_comments": 30, "high_likes": 500},
+    "weixin": {"label": "微信公众号", "min_likes": 1000, "min_comments": 30, "high_likes": 3000}
+  },
+  "rule": "先过同平台互动门槛，再做结构分析；点赞/支持达到min_likes且评论达到min_comments，或单项支持达到high_likes。未知不是零，未知不能通过。门槛是可调整的初始编辑规则，不是平台官方爆款标准。",
+  "scope": "只学习公开作品的结构方法，不复用故事、人物、事实、独特措辞；不把高互动推断成写法导致点赞的因果证明。"
+}

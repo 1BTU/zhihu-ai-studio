@@ -1,0 +1,19 @@
+{
+  "platform": "zhihu",
+  "url": "https://www.zhihu.com/question/2095840244973004152/answer/2095857621806868117",
+  "title": "陶哲轩和邓煜的对谈《数学与 AI 究竟是什么关系？》，如何理解他们各自的观点？",
+  "author": null,
+  "observed_at": "2026-10-21T03:00:19.277Z",
+  "verification": "live_dom",
+  "metric_label": "赞同",
+  "likes": 528,
+  "comments": 121,
+  "body_length": 1109,
+  "body_sha256": "62adeebef0276cd7b309577c9bf74c98a50fb1b9a9948fb61ebe10c680846d5e",
+  "evidence": {
+    "location": "登录后的关注流，指定回答卡片",
+    "vote_text": "赞同 528",
+    "comment_text": "121 条评论",
+    "full_text_expanded": true
+  }
+}

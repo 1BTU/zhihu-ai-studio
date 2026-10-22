@@ -1,0 +1,17 @@
+[Unit]
+Description=Zhihu AI Writing Studio
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhihu
+WorkingDirectory=/srv/zhihu-ai-studio
+EnvironmentFile=/srv/zhihu-ai-studio/.env
+Environment=PATH=/srv/zhihu-ai-studio/.venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/srv/zhihu-ai-studio/.venv/bin/python studio/server.py
+Restart=on-failure
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,974 @@
+[
+  {
+    "id": "sspai-62399",
+    "title": "对回复的思考，或许是时候改变",
+    "url": "https://sspai.com/post/62399",
+    "platform": "sspai",
+    "tags": [
+      "科技",
+      "消息",
+      "客服",
+      "回复",
+      "注意力",
+      "社交",
+      "期待",
+      "工具",
+      "边界",
+      "日常摩擦"
+    ],
+    "author": null,
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先提出日常沟通中的不适，让读者带着自己的经历进入。",
+      "推进": [
+        "观察回复压力",
+        "区分交流媒介",
+        "用熟悉事物解释差异",
+        "重新理解回复义务"
+      ],
+      "证据": "经验观察与媒介比较，论据支撑的是解释框架，不是人群比例。",
+      "结尾": "回到日常行为的解释，不堆新闻背景。",
+      "可迁移": "先辨认读者默认的期待，再解释这种期待为何未必适合新工具。",
+      "不可迁移": "不能照搬信件比喻、生活经历或具体句子。",
+      "反馈解释假设": "可识别的压力和重新解释可能带来共鸣；未读全量评论，不能证明点赞原因。",
+      "适用限制": "原文明确排除需即时响应的客服工作；只借拆解期待的方法，不借慢回复建议或后半操作清单。"
+    },
+    "patterns": [
+      "observation-reframe",
+      "objection-boundary"
+    ],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:08.412417+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 352,
+      "comments": 26,
+      "evidence_path": "raw/sspai-62399/20261022T000008412572Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-82961",
+    "title": "生活的平衡",
+    "url": "https://sspai.com/post/82961",
+    "platform": "sspai",
+    "tags": [
+      "民生",
+      "生活",
+      "独居",
+      "消费",
+      "选择",
+      "读书",
+      "时间",
+      "理想",
+      "真实代价",
+      "个人处境"
+    ],
+    "author": "Sylvan_Wang",
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从独居后的实际负担进入，问题有具体承担者。",
+      "推进": [
+        "列出相互挤压的日常需要",
+        "写尝试和失败",
+        "展示取舍",
+        "保留未解决部分"
+      ],
+      "证据": "作者自身经历；不能外推为所有年轻人的规律。",
+      "节奏": "多个生活片段共同支撑同一问题，抽象判断晚于细节。",
+      "可迁移": "用选择的真实成本推进，而非用空泛情绪填充。",
+      "不可迁移": "不能把作者的独居、做饭、旅行经历写成我或虚构读者的经历。",
+      "反馈解释假设": "相互冲突的生活需求具有辨识度；评论动机与读完率未核实。",
+      "适用限制": "不照搬作者对工作与心理健康的价值判断，不把个人平衡点推广成普遍处方。"
+    },
+    "patterns": [
+      "observation-reframe"
+    ],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:10.039741+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 168,
+      "comments": 45,
+      "evidence_path": "raw/sspai-82961/20261022T000010039924Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-64609",
+    "title": "我们过得怎么样？少数派的 2020 和 2021",
+    "url": "https://sspai.com/post/64609",
+    "platform": "sspai",
+    "tags": [
+      "科技",
+      "产品",
+      "品牌",
+      "商业",
+      "项目",
+      "服务",
+      "复盘",
+      "成本",
+      "可信度"
+    ],
+    "author": null,
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从组织如何定义自己切入，将业务变化串成一个问题。",
+      "推进": [
+        "回顾具体行动",
+        "解释选择依据",
+        "呈现投入与限制",
+        "回应未来方向"
+      ],
+      "证据": "内部项目与经营资料，属于当事方自述，需保留立场边界。",
+      "可迁移": "写产品卖点时，用已发生的投入和取舍说明承诺是否可信。",
+      "不可迁移": "企业故事和经营数据不能移植；不能冒充独立评测。",
+      "反馈解释假设": "社区认同可能影响互动，不能把结果单独归功于文笔。",
+      "适用限制": "优先用于产品或项目复盘，不作为娱乐事件或普通人生活的首选模板。"
+    },
+    "patterns": [
+      "observation-reframe"
+    ],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:13.352139+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 232,
+      "comments": 84,
+      "evidence_path": "raw/sspai-64609/20261022T000013352312Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "zhihu-2095857621806868117",
+    "title": "数学与 AI 对谈：关于竞争动机的一篇回答",
+    "url": "https://www.zhihu.com/question/2095840244973004152/answer/2095857621806868117",
+    "platform": "zhihu",
+    "tags": [
+      "科技",
+      "AI",
+      "数学",
+      "竞争",
+      "职业",
+      "身份",
+      "能力",
+      "反例",
+      "动机",
+      "选择"
+    ],
+    "author": null,
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先挑出讨论中被忽略的比较维度，直接给判断。",
+      "推进": [
+        "对照人的反应与工具机制",
+        "给具体研究例子",
+        "回应正确性质疑",
+        "承认边界",
+        "区分做研究的动机"
+      ],
+      "节奏": "案例与反问交替，末段回到人的目标。",
+      "可迁移": "围绕最强反对意见补证据；结尾区分不同读者为何在乎。",
+      "不可迁移": "武学比喻和研究断言不复用；具体技术结论必须重新核实。",
+      "事实风险": "部分断言语气绝对；只借论证顺序，不借确定性。",
+      "反馈解释假设": "立场和争议均可能贡献互动；未读评论，不能视121条评论为121份好评。"
+    },
+    "patterns": [
+      "objection-boundary"
+    ],
+    "metrics": {
+      "observed_at": "2026-10-21T03:00:19.277Z",
+      "verification": "live_dom",
+      "metric_label": "赞同",
+      "likes": 528,
+      "comments": 121,
+      "evidence_path": "raw/zhihu-2095857621806868117/initial.json"
+    }
+  },
+  {
+    "id": "sspai-52866",
+    "title": "买买买，努力成为自己的优秀产品经理",
+    "url": "https://sspai.com/post/52866",
+    "platform": "sspai",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:16.157523+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 6,
+      "comments": 17,
+      "evidence_path": "raw/sspai-52866/20261022T000016157732Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-63419",
+    "title": "我们买过这些收货就想丢出家门的蠢东西",
+    "url": "https://sspai.com/post/63419",
+    "platform": "sspai",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:20.229578+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 59,
+      "comments": 111,
+      "evidence_path": "raw/sspai-63419/20261022T000020229859Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-91443",
+    "title": "不懂开发，我借助 AI 开发了一个工具，已上线可免费使用",
+    "url": "https://sspai.com/post/91443",
+    "platform": "sspai",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:25.393214+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 67,
+      "comments": 26,
+      "evidence_path": "raw/sspai-91443/20261022T000025393369Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-114366",
+    "title": "我一定会回来……吗？小手用户与 iPhone 17 Pro Max 的一年",
+    "url": "https://sspai.com/post/114366",
+    "platform": "sspai",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:32.707463+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 54,
+      "comments": 34,
+      "evidence_path": "raw/sspai-114366/20261022T000032707649Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-65551",
+    "title": "每天 100 个俯卧撑，20 天之后究竟能牛成什么样子？",
+    "url": "https://sspai.com/post/65551",
+    "platform": "sspai",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:35.013090+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 6,
+      "comments": 59,
+      "evidence_path": "raw/sspai-65551/20261022T000035013241Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "huxiu-4858490",
+    "title": "AI尽孝，收割年轻人",
+    "url": "https://www.huxiu.com/article/4858490.html",
+    "platform": "huxiu",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {}
+  },
+  {
+    "id": "36kr-2162318890152195",
+    "title": "35元一杯的县城咖啡，我快高攀不起了",
+    "url": "https://www.36kr.com/p/2162318890152195",
+    "platform": "36kr",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {}
+  },
+  {
+    "id": "weixin-naojiti",
+    "title": "AI尽孝，收割年轻人（公众号原文）",
+    "url": "https://mp.weixin.qq.com/s/DcwtLO5jZkh7UnNJkowLcw",
+    "platform": "weixin",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {}
+  },
+  {
+    "id": "smzdm-a5o3kw98",
+    "title": "你阅读国家买单！期刊图书免费看，还能听书，附使用攻略",
+    "url": "https://post.smzdm.com/p/a5o3kw98/",
+    "platform": "smzdm",
+    "tags": [
+      "候选"
+    ],
+    "author": null,
+    "full_text_read": false,
+    "analysis_status": "pending",
+    "analysis": {},
+    "patterns": [],
+    "metrics": {}
+  },
+  {
+    "id": "sspai-96419",
+    "title": "2024 年开咖啡店从开业到转让的感悟",
+    "url": "https://sspai.com/post/96419",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "咖啡",
+      "开店",
+      "创业",
+      "外卖",
+      "成本",
+      "消费"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先交代已经转店的结果，再回溯为什么连有行业经验的人也会入局。",
+      "推进": [
+        "合作条件击中心动点",
+        "原先盈利测算",
+        "实际成本与平台获客",
+        "重新认识经营能力"
+      ],
+      "证据与排版": "经营成本图、订单及自身测算，让预期落差有具体载体。",
+      "为何值得参考": "失败者交代自己当时如何相信，比站在终点劝别人清醒更有代入感。",
+      "可迁移": "写清一项选择在当时为什么合理，再用实际代价修正判断。",
+      "适用限制": "单店自述不是行业统计；不复用成本比例、加盟评价或投资建议，图表数值未经独立审计。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "expectation-reality"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599049+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:36.806954+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 218,
+      "comments": 80,
+      "evidence_path": "raw/sspai-96419/20261022T000036807110Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-86863",
+    "title": "年度征文 | 当了两年全职奶爸感悟：生孩子还需慎重",
+    "url": "https://sspai.com/post/86863",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "育儿",
+      "家庭",
+      "照护",
+      "分工",
+      "亲子",
+      "日常生活"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先将过于绝对的劝说收窄为慎重选择，说明自己作为父亲的处境。",
+      "推进": [
+        "经济与家庭支持条件",
+        "照护的日常劳动",
+        "保留个人事业",
+        "旅行中的辛苦和快乐"
+      ],
+      "证据与排版": "家庭资源、作息与出行细节并置，展示照护成本和回报同时存在。",
+      "为何值得参考": "不把养育只写成幸福或牺牲，重复劳动与小快乐的交错容易唤起照护者经验。",
+      "可迁移": "先公开叙述者拥有的资源，再写选择的代价，避免把有条件的经验说成普遍答案。",
+      "适用限制": "只借照护叙事；不借生育、医疗或心理健康判断。原文对不育家庭及保姆的泛化评价不作为范例。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "lived-contradiction"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599066+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:38.864501+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 203,
+      "comments": 117,
+      "evidence_path": "raw/sspai-86863/20261022T000038864705Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-86905",
+    "title": "年度征文｜上什么班啊，不过是来历劫罢了",
+    "url": "https://sspai.com/post/86905",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "职场",
+      "上班",
+      "工作",
+      "安全感",
+      "评价",
+      "矛盾",
+      "共鸣"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "承认自己曾不想上班却又回到职场，用自我推翻留下悬念。",
+      "推进": [
+        "返回工作的动机",
+        "理想团队解散",
+        "普通公司的不适",
+        "渴望认可与害怕失去并存",
+        "保留尚未解决的状态"
+      ],
+      "证据与排版": "两段反差鲜明的工作经历构成叙事，不是劳动市场普查。",
+      "为何值得参考": "自嘲和自相矛盾比单向控诉更像真实处境；结尾没有突然成功，接近用户希望的余味。",
+      "可迁移": "让人物的两种需求互相拉扯，用事件推进认识变化，不替读者强行完成和解。",
+      "适用限制": "不复用作者履历、独特比喻、金句；不照搬认命立场或将雇佣关系全部归为个人心态。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "lived-contradiction"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599071+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:40.838092+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 142,
+      "comments": 60,
+      "evidence_path": "raw/sspai-86905/20261022T000040838253Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-77745",
+    "title": "差生文具多，纸和笔才是笔记王道吗？",
+    "url": "https://sspai.com/post/77745",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "科技",
+      "笔记",
+      "工具",
+      "AI",
+      "争论",
+      "学习",
+      "产品选择"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从纸笔与数字工具的争执进入，随后追问双方是否真的追求同一个结果。",
+      "推进": [
+        "呈现工具争执",
+        "拆分两类使用目标",
+        "比较不同场景",
+        "扩展到技术变化",
+        "回到个人选择"
+      ],
+      "证据与排版": "书籍观点、课堂观察和类比，主要支持目标区分。",
+      "为何值得参考": "把站队冲突改写为目标差异，能替被工具评价困住的读者减轻压力。",
+      "可迁移": "比较产品前先写明任务与评价标准，让不同结论各自有成立条件。",
+      "适用限制": "不借用汽车等原有比喻；关于记忆研究和AI的论断未独立验证，不能当作技术事实或教育结论。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "goal-before-tool"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599075+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:43.801330+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 148,
+      "comments": 40,
+      "evidence_path": "raw/sspai-77745/20261022T000043801543Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-78088",
+    "title": "我用 Figma/Figside/浩客 无代码搭了个人官网",
+    "url": "https://sspai.com/post/78088",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "科技",
+      "产品",
+      "网站",
+      "无代码",
+      "数据",
+      "用户反馈",
+      "工具",
+      "卖点"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从个人说明书的需求进入，较早展示已经上线的网站，再解释实现过程。",
+      "推进": [
+        "展示成果",
+        "搭建设计与托管",
+        "问卷反馈受阻",
+        "调整问题顺序",
+        "讨论工具如何带来业务价值"
+      ],
+      "证据与排版": "个人网站截图、问卷调整记录与业务案例串联；效果数值是作者自述。",
+      "为何值得参考": "读者先看见可实现的结果，再看到使用中的不顺，产品价值更具体。",
+      "可迁移": "以任务完成后的变化解释卖点，并写出工具仍未解决的问题。",
+      "适用限制": "部分后半讨论带产品宣传和主观推测；旧工具可用性、转化率及因果需重查，不能承诺相同效果。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "result-to-value"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599079+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:47.371176+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 211,
+      "comments": 30,
+      "evidence_path": "raw/sspai-78088/20261022T000047371414Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-58381",
+    "title": "生活方法论：让「二手」成为生活状态",
+    "url": "https://sspai.com/post/58381",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "消费",
+      "二手",
+      "闲置",
+      "数码",
+      "信息差",
+      "价格",
+      "购买决策"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先列出读者对二手的顾虑，再讨论购买动机，而不是立即给操作步骤。",
+      "推进": [
+        "辨认消费动机",
+        "衡量时间与金钱",
+        "从买方看信息差",
+        "从卖方看定价",
+        "回到物品使用价值"
+      ],
+      "证据与排版": "个人交易经验、商品类别与买卖双方视角，缺少系统统计验证。",
+      "为何值得参考": "让读者既看到节省的可能，也看到沟通成本；双向视角比一味鼓励省钱完整。",
+      "可迁移": "把价格之外的时间、风险和使用频率纳入同一个选择。",
+      "适用限制": "原文有受骗者归责、卖家群体泛化及分数筛人等问题，不学习；旧平台规则和保值说法不可沿用。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "goal-before-tool"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599083+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:49.587289+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 302,
+      "comments": 74,
+      "evidence_path": "raw/sspai-58381/20261022T000049587600Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-58845",
+    "title": "这些文具，让我重新爱上书写 | 年度征文",
+    "url": "https://sspai.com/post/58845",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "科技",
+      "产品",
+      "文具",
+      "消费",
+      "卖点",
+      "使用体验",
+      "购买决策",
+      "书写"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "以跟风购入后闲置的文具反衬后来真正用起来的物件，需求由此明确。",
+      "推进": [
+        "交代失败购买",
+        "详写两类常用物件",
+        "用动作解释小设计",
+        "其余产品简短比较",
+        "承认写字仍未变好"
+      ],
+      "证据与排版": "具体书写、携带与收纳场景，并保留价格、兼容和购买不便。",
+      "为何值得参考": "小设计解决小麻烦，结尾不夸大效果，比参数堆砌更容易让人理解卖点。",
+      "可迁移": "卖点落到使用动作：做什么、哪里更顺、还存在哪些不便。",
+      "适用限制": "历史产品价格和购买渠道需重核；不冒充自己使用过，也不照搬作者体验、幽默或推荐等级。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "result-to-value"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599087+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:54.299143+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 155,
+      "comments": 39,
+      "evidence_path": "raw/sspai-58845/20261022T000054299315Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-58757",
+    "title": "这是我用过的最合适我的包包",
+    "url": "https://sspai.com/post/58757",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "消费",
+      "背包",
+      "产品",
+      "设计",
+      "通勤",
+      "卖点",
+      "取舍"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从背包承载物品的基本任务切入，很快交代为什么这只包适合自己的通勤。",
+      "推进": [
+        "容量对应所带物品",
+        "逐个开口与取物动作",
+        "解释看似矛盾的拉链评价",
+        "指出电脑保护等不足",
+        "用取舍解释满意"
+      ],
+      "证据与排版": "装包照片、取物路径、个人携带习惯与不满意的细节。",
+      "为何值得参考": "把抽象设计写成身体动作，且承认短板，推荐的可信度来自明确适用对象。",
+      "可迁移": "评价同一功能在不同位置的不同作用，让优点与代价一起出现。",
+      "适用限制": "旧款售价、库存和防护能力不当作当前购买依据；单人体验不证明普适或安全性能。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "result-to-value"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599100+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:56.098795+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 167,
+      "comments": 92,
+      "evidence_path": "raw/sspai-58757/20261022T000056098939Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-77426",
+    "title": "为什么我们要减少阅读新闻",
+    "url": "https://sspai.com/post/77426",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "科技",
+      "热点",
+      "信息",
+      "阅读",
+      "注意力",
+      "新闻",
+      "筛选",
+      "社交媒体"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从知识管理工具的热潮转向被忽略的信息源问题，给常见讨论换一个入口。",
+      "推进": [
+        "提出信息摄入负担",
+        "拆分偏见效率与习惯",
+        "解释其叠加影响",
+        "提出替代信息习惯",
+        "承认无法完全隔绝"
+      ],
+      "证据与排版": "个人阅读调整、书籍引用与案例对比；文中调查及引语未另行核实。",
+      "为何值得参考": "将追赶热点的疲惫说出来，再提供选择信息的余地，可能回应读者的信息焦虑。",
+      "可迁移": "写热点时识别标题赋予了什么标签、哪些信息仍缺失，提炼长期问题。",
+      "适用限制": "不采用文中政治相关案例；不把新闻整体判为无价值，不借未经核实的调查数字或名人引语。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "observation-reframe"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599106+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:57.233699+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 387,
+      "comments": 63,
+      "evidence_path": "raw/sspai-77426/20261022T000057233898Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-78004",
+    "title": "提升文章阅读体验，我去年用了这 12 个写作秘诀",
+    "url": "https://sspai.com/post/78004",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "写作",
+      "排版",
+      "标题",
+      "开头",
+      "结构",
+      "读者",
+      "反馈",
+      "阅读体验"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "先区分发表和让人愿意读，说明自己的实践反馈及文章服务对象。",
+      "推进": [
+        "动笔前明确标题与提纲",
+        "开头让人理解价值",
+        "正文用因果与示例",
+        "用样式降低阅读负担",
+        "读者反馈推动修改"
+      ],
+      "证据与排版": "作者作品例子、修改过程及截图；互动增长不等于某种技巧已被因果证明。",
+      "为何值得参考": "每个技巧解释原因和具体做法，读者能检查自己的稿件而不只记抽象术语。",
+      "可迁移": "检查段落是否推动因果，标题能否帮助扫读，加粗是否克制；根据题材选择方法。",
+      "适用限制": "不复制十二条结构、示例或数据，不把创作自述当科学实验；评论文章不必套成步骤教程。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "reader-experience"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599111+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:00:59.135788+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 261,
+      "comments": 32,
+      "evidence_path": "raw/sspai-78004/20261022T000059136162Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-71576",
+    "title": "放弃纠结、拥抱妥协，重器轻用就是高效",
+    "url": "https://sspai.com/post/71576",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "科技",
+      "效率",
+      "工具",
+      "笔记",
+      "极简",
+      "工作流",
+      "产品选择",
+      "取舍"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "从开发者自己的极简工具环境出发，随后承认极简本身未必带来效率。",
+      "推进": [
+        "交代原有偏好",
+        "区分工具数量与效率",
+        "提出允许妥协",
+        "展开多工具工作流",
+        "说明数据流转条件"
+      ],
+      "证据与排版": "开发者工作流和具体任务展示，包含对自有产品的介绍。",
+      "为何值得参考": "作者推翻自己的偏好并展示例外，能回应读者反复选工具的烦恼。",
+      "可迁移": "用任务是否变顺检验理念，承认额外配置的前置成本。",
+      "适用限制": "作者是简悦开发者，存在自有产品推广视角；性能、服务价格与云存储概括不能直接引用。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "goal-before-tool"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599115+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:01:00.008513+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 185,
+      "comments": 41,
+      "evidence_path": "raw/sspai-71576/20261022T000100008830Z.json"
+    },
+    "last_refresh_error": null
+  },
+  {
+    "id": "sspai-70146",
+    "title": "年度征文 | 打工人如何每周用两小时准备一周食材",
+    "url": "https://sspai.com/post/70146",
+    "platform": "sspai",
+    "author": null,
+    "tags": [
+      "民生",
+      "生活",
+      "独居",
+      "做饭",
+      "时间",
+      "备餐",
+      "工作",
+      "教程"
+    ],
+    "full_text_read": true,
+    "analysis_status": "reviewed",
+    "analysis": {
+      "开头": "用毕业后持续做饭的经历说明现实需求，再讨论如何降低日常投入。",
+      "推进": [
+        "解释为什么准备",
+        "比较三种准备方案",
+        "说明个人厨房条件",
+        "展示采购分装与烹饪时间",
+        "回到吃饭的生活感受"
+      ],
+      "证据与排版": "采购清单、时间拆解、食材图片和实际搭配表，信息颗粒度具体。",
+      "为何值得参考": "把宽泛的好好生活变成下班后做得成的小事，实用细节承托了情绪。",
+      "可迁移": "教程先公开适用条件，再给完整样例；末尾情绪由前面行动积累。",
+      "适用限制": "仅学习教程组织；不借食品安全、营养、保存期限等建议，也不复用外卖卫生泛化。价格与耗时是个人旧记录。",
+      "反馈解释边界": "页面互动是筛选信号，尚未分析全量评论；征文展示与社区曝光也可能影响数据，不能据此断言获赞原因。"
+    },
+    "patterns": [
+      "reader-experience"
+    ],
+    "discovery": {
+      "route": "历年征文结果页链接筛选",
+      "screened_report": "research/contest-discovery.json",
+      "reviewed_at": "2026-10-21T04:54:18.599119+00:00"
+    },
+    "metrics": {
+      "observed_at": "2026-10-22T00:01:04.376254+00:00",
+      "verification": "live_public_html",
+      "metric_label": "充电",
+      "likes": 391,
+      "comments": 53,
+      "evidence_path": "raw/sspai-70146/20261022T000104376681Z.json"
+    },
+    "last_refresh_error": null
+  }
+]

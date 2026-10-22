@@ -1,0 +1,16 @@
+{
+  "name": "zhihu-ai-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "login": "node login.mjs",
+    "draft": "node draft.mjs",
+    "wiki:export": "python3 sync-web.py",
+    "test:images": "node tests/test_zhihu_images.mjs"
+  },
+  "dependencies": {
+    "puppeteer": "^25.14.0"
+  },
+  "description": "Self-hosted AI writing studio with an evidence-grounded LLM Wiki and verified Zhihu publishing"
+}

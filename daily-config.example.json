@@ -1,0 +1,22 @@
+{
+  "recipient": "",
+  "notify_email": false,
+  "timezone": "Asia/Shanghai",
+  "time": "08:00",
+  "count": 3,
+  "review_max_rounds": 3,
+  "publish": false,
+  "sources": "weibo,sspai,36kr,infoq_cn,hackernews",
+  "login_wait_seconds": 180,
+  "qr_mail_limit": 2,
+  "article_layout": [
+    "long",
+    "short",
+    "short"
+  ],
+  "long_min_chars": 10000,
+  "illustrations": {
+    "enabled": false,
+    "status": "awaiting_image_provider"
+  }
+}

@@ -1,0 +1,1 @@
+{"type":"object","additionalProperties":false,"properties":{"sent":{"type":"boolean"},"message_id":{"type":"string"},"error":{"type":"string"}},"required":["sent","message_id","error"]}

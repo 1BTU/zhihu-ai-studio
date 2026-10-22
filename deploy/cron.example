@@ -1,0 +1,5 @@
+# crontab -e for the same user that runs the studio; adapt paths.
+# Set the host timezone to match daily-config.json before installing this entry.
+0 8 * * * cd /srv/zhihu-ai-studio && ./run-daily.sh
+# Optional wiki HTML export; this does not refresh remote engagement evidence.
+* * * * * cd /srv/zhihu-ai-studio && .venv/bin/python sync-web.py >/dev/null 2>&1

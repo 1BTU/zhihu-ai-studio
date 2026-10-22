@@ -1,0 +1,182 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "insufficient_sources"
+      ]
+    },
+    "report": {
+      "type": "string"
+    },
+    "articles": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "topic_key": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "科技",
+              "娱乐",
+              "民生"
+            ]
+          },
+          "event_date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "paragraph",
+                    "heading"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "text"
+              ]
+            }
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "date"
+              ]
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "writing_plan": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "reader_question": {
+                "type": "string"
+              },
+              "thesis": {
+                "type": "string"
+              },
+              "references": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "learn": {
+                      "type": "string"
+                    },
+                    "adapt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "learn",
+                    "adapt"
+                  ]
+                }
+              },
+              "outline": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 7,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "strongest_objection": {
+                "type": "string"
+              },
+              "evidence_boundary": {
+                "type": "string"
+              },
+              "changes_after_review": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "reader_question",
+              "thesis",
+              "references",
+              "outline",
+              "strongest_objection",
+              "evidence_boundary",
+              "changes_after_review"
+            ]
+          },
+          "genre": {
+            "type": "string",
+            "enum": [
+              "fiction"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "topic_key",
+          "category",
+          "event_date",
+          "blocks",
+          "sources",
+          "tags",
+          "writing_plan"
+        ]
+      }
+    }
+  },
+  "required": [
+    "status",
+    "report",
+    "articles"
+  ]
+}
