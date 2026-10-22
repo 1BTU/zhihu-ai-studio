@@ -143,3 +143,22 @@ Python 与图片验证测试不发布文章或发送邮件。UI smoke 使用本�
 AI 读取当日真实进度，只补缺少的任务：原创想法、合适的关注与赞同、经阅读后的评论、查重后的有价值提问等。不反复取消关注或赞同以刷任务、不要求凑稿。每个动作先保存意图和正文；内容提交最多执行一轮，异常或延迟计入时，每隔 30 分钟只复查，最多四次检查，23:00 后停止。中断恢复不再次启动提交。
 
 最终结果由独立浏览器读取活动页核验，必须“已完成”且创作、互动两项数量达标，模型自报成功不算。`python challenge.py --verify-only` 可只核对当天进度。结果、截图、意图与日志在私有 `reports/YYYY-MM-DD/challenge/`，工作台“知乎日常”显示打卡记录。登录失效且跳转登录页时复用二维码邮件流程；每个打卡日最多启动一次登录恢复。
+
+
+## 配置每日知识库采集
+
+复制 `wiki-collect-config.example.json` 为 `wiki-collect-config.json`，将 `model` 设为模型设置中已经验证的 DeepSeek 选项。密钥仍从 `private/studio/models.json` 读取，不写入采集配置。可调整文章候选数、分析上限、发现页面和梗资料入口。先手动执行：
+
+```bash
+.venv/bin/python wiki_collect.py --force
+```
+
+安装 `deploy/llm-wiki-collect.service` 与 `.timer` 到 `/etc/systemd/system/`，按实际路径修改 service，然后执行：
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now llm-wiki-collect.timer
+systemctl list-timers llm-wiki-collect.timer
+```
+
+模板按 Asia/Shanghai 每日02:10运行。要修改执行时间，应同步修改 timer 的 `OnCalendar` 和配置文件的展示时间；配置里的 `time` 只是页面展示，不单独驱动 systemd。独立采集锁防止重入，每天默认只执行一次；`--force` 允许主动重跑，已有文章和梗来源仍去重。采集不调用知乎发布接口，也不占浏览器账号锁。日志使用 `journalctl -u llm-wiki-collect.service`，本地运行证据在 `private/wiki-ingest/`，失败候选保留原因而不伪造指标。

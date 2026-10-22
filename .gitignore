@@ -18,3 +18,10 @@ daily-config.json
 *.tar.gz
 *.pem
 *.key
+
+# Local knowledge ingestion state and configurable collection schedule.
+wiki-collect-config.json
+writing-wiki/.catalog.lock
+writing-wiki/memes.json
+writing-wiki/collection-status.json
+writing-wiki/wiki/memes/

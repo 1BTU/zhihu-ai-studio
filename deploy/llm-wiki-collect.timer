@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily writing wiki discovery at 02:10 Asia/Shanghai
+[Timer]
+OnCalendar=*-*-* 02:10:00 Asia/Shanghai
+Persistent=true
+Unit=llm-wiki-collect.service
+[Install]
+WantedBy=timers.target

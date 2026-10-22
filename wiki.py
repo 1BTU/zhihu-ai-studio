@@ -61,6 +61,27 @@ def tokens(t):
   words += [run[i:i+n] for n in (2,3) for i in range(max(0,len(run)-n+1))]
  return collections.Counter(words)
 
+def load_memes():
+ p=ROOT/'memes.json'
+ return json.loads(p.read_text()) if p.exists() else []
+
+def meme_status(card):
+ dates=[]
+ for source in card.get('sources',[]):
+  try:dates.append(dt.date.fromisoformat(source.get('published_at') or ''))
+  except ValueError:pass
+ today=dt.datetime.now(dt.timezone.utc).date()
+ return '近期有报道' if any(0<=(today-d).days<=30 for d in dates) else '历史收录 / 当前热度未核实'
+
+def meme_search(query,limit=4):
+ q=tokens(query);hits=[]
+ for c in load_memes():
+  if not c.get('sources'):continue
+  text=tokens(' '.join(str(c.get(k,'')) for k in ('name','meaning','usage','avoid')))
+  score=sum(text[t] for t in q)
+  if score:hits.append({**c,'heat_status':meme_status(c),'score':score})
+ return sorted(hits,key=lambda c:-c['score'])[:limit]
+
 def validate_plan(article):
  plan=article.get('writing_plan',{})
  refs=plan.get('references',[])
@@ -118,4 +139,8 @@ def main():
    for link in re.findall(r'\]\(([^)]+)\)',p.read_text()):
     if not link.startswith(('https://','http://','#')) and not (p.parent/link).exists():raise ValueError('断链：'+str(p)+' -> '+link)
  print(json.dumps({'eligible':sum(s['eligible'] for s in states),'candidates':sum(not s['eligible'] for s in states),'states':states},ensure_ascii=False,indent=2))
-if __name__=='__main__':main()
+if __name__=='__main__':
+ import fcntl
+ with (ROOT/'.catalog.lock').open('a') as lock:
+  fcntl.flock(lock,fcntl.LOCK_EX)
+  main()

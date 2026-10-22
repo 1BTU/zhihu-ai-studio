@@ -13,7 +13,11 @@ class FormatTests(unittest.TestCase):
   self.post=mock.patch.object(providers.requests,'post',side_effect=responses).start();self.addCleanup(mock.patch.stopall)
   mock.patch.object(providers,'load',return_value={'providers':[{'id':'deepseek','models':['test'],'base_url':'https://example.test','key':'test'}]}).start()
   events=[]
-  return lambda:providers.run('deepseek:test','输出JSON测试',root/'out.json',schema,lambda k,v:events.append((k,v))),root,events
+  return lambda **kwargs:providers.run('deepseek:test','输出JSON测试',root/'out.json',schema,lambda k,v:events.append((k,v)),**kwargs),root,events
+ def test_summary_mode_disables_research_tools(self):
+  run,root,events=self.run_responses(['{"answer":"summary"}'])
+  self.assertEqual(run(research=False),{'answer':'summary'})
+  self.assertNotIn('tools',self.post.call_args.kwargs['json'])
  def test_json_mode_and_bounded_format_correction(self):
   run,root,events=self.run_responses(['not json','{"answer":"ok"}']);self.assertEqual(run(),{'answer':'ok'})
   self.assertEqual(self.post.call_count,2);payloads=[x.kwargs['json'] for x in self.post.call_args_list]

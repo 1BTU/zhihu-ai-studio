@@ -1,0 +1,10 @@
+[Unit]
+Description=Collect writing references and meme notes with DeepSeek
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/zhihu-ai-studio
+ExecStart=/opt/zhihu-ai-studio/.venv/bin/python /opt/zhihu-ai-studio/wiki_collect.py
+TimeoutStartSec=45min
+UMask=0077

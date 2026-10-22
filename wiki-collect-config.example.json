@@ -1,0 +1,30 @@
+{
+  "enabled": true,
+  "time": "02:10",
+  "timezone": "Asia/Shanghai",
+  "model": "deepseek:deepseek-flash",
+  "article_limit": 6,
+  "candidate_limit": 40,
+  "meme_source_limit": 5,
+  "discovery_urls": [
+    "https://sspai.com/tag/生活方式",
+    "https://sspai.com/tag/职场",
+    "https://sspai.com/tag/读书",
+    "https://sspai.com/tag/电影",
+    "https://sspai.com/tag/年度征文",
+    "https://sspai.com/tag/旅行",
+    "https://sspai.com",
+    "https://sspai.com/feed"
+  ],
+  "meme_queries": [
+    "网络热梗 流行语 来源 2026",
+    "娱乐 网络热梗 最近 来源"
+  ],
+  "meme_seed_urls": [
+    "https://feng.ifeng.com/c/8xDzvtrprYR",
+    "https://hzdaily.hangzhou.com.cn/dskb/2026/07/21/article_detail_2_20260721A091.html",
+    "https://www.chinanews.com/sh/2025/12-28/10541834.shtml",
+    "https://www3.xinhuanet.com/book/20251212/83e4aed3aff145959bf5a06243280302/c.html",
+    "https://www.chinanews.com.cn/m/cul/2025/12-02/10525514.shtml"
+  ]
+}

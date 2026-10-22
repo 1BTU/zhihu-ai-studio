@@ -3,3 +3,5 @@
 .search>.search-icon{display:inline-block;flex-shrink:0;position:relative;width:12px;height:12px;border:1.5px solid #80907c;border-radius:50%;margin-right:3px}.search>.search-icon::after{content:"";position:absolute;width:5px;height:1.5px;background:#80907c;right:-4px;bottom:-2px;transform:rotate(45deg)}
 
 .workspace-actions{display:flex;flex-direction:column;gap:10px;align-items:flex-end}.workspace-back{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:12px;background:#285943;color:#fff;text-decoration:none;font-size:15px;font-weight:600;box-shadow:0 5px 16px #28594320}.workspace-back:hover{background:#173d2d}.feedback-link{font-size:13px;color:#41644b;padding:6px}.workspace-back:focus-visible{outline:3px solid #9ebc89;outline-offset:3px}@media(max-width:760px){.workspace-actions{width:100%;align-items:stretch}.workspace-back{width:100%;min-height:48px}.feedback-link{text-align:center}header{flex-wrap:wrap;gap:18px}}
+
+.collection-status{padding:14px 18px;background:#eaf0e9;border-radius:12px;font-size:14px;line-height:1.8;color:#385b4e;margin:18px 0}
