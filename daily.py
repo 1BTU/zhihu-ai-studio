@@ -237,7 +237,7 @@ def generate():
         prompt = (ROOT/'daily-prompt.txt').read_text() + f'\n北京时间今天是 {TODAY}。本次只生成 {CFG["count"]} 篇。本次采集文件：{RUN}/hotspots.json。最近14天历史：{RUN}/history.json。\n本次通过互动门槛的参考卡及规则：{RUN}/writing-context.json。'
         if 'long' in CFG.get('article_layout',[]) and CFG['count']==3:prompt+='\n本批次为一篇长文、两篇短文。第一篇先输出1000–1600字的可靠基础稿，选题必须足以支撑万字深度论证或完整故事，后续会独立分节扩写。第二、三篇直接输出1000–1600字完整短文。不要在一次输出中生成三篇长文。'
         if CFG.get('article_layout') and all(x=='short' for x in CFG['article_layout']):prompt+='\n本次全部为完整短文，每篇正文1000–1600字，禁止扩写成长篇。'
-        prompt += '\n本次时段方向：'+CFG.get('editorial_lane','三篇时依次为生活关系故事、解释作品实用、灵活；单篇按用户要求或历史缺口选择')+'。在report记录读者收益与选题类型。热点采集失败或无合适热点时改查常青资料，不编造。'
+        prompt += '\n本次时段方向：'+CFG.get('editorial_lane','每日三篇热点短文，优先娱乐与民生，科技不包揽；小说仅在用户指定的专栏任务中创作')+'。在report记录读者收益与选题类型。热点采集失败时可用其他公开渠道核实热点；仍不足则说明缺口，不用常青随笔或小说凑数。'
         report_progress('选题与初稿', 'AI核实来源、检索范文并撰写文章')
         col=selected_daily_column()
         if col:prompt+='\n本次专栏要求（优先遵守定位和人物资料）：'+json.dumps(col,ensure_ascii=False)
@@ -255,6 +255,8 @@ def generate():
         col=selected_daily_column()
         if col and col['config'].get('genre')=='fiction':a['genre']='fiction';a['content_mode']='fiction'
         if a.get('content_mode')=='fiction':a['genre']='fiction'
+        if CFG.get('hot_topics_only',True) and not (col and col['config'].get('genre')=='fiction') and a.get('content_mode','hot')!='hot':
+            raise RuntimeError('每日自动任务仅发布热点，常青内容与小说请通过对话单独创作')
         layout=CFG.get('article_layout',[])
         if layout and layout[index-1]=='long':
             import longform

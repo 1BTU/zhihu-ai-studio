@@ -66,7 +66,7 @@ def tick(cfg):
         else:
             slot['status']='preparing' if todo=='prepare' else 'publishing';save(folder/'schedule.json',value)
             daily.RUN=folder/'slots'/slot['id'];daily.RUN.mkdir(parents=True,exist_ok=True)
-            daily.TODAY=date;daily.CFG=dict(cfg,count=1,article_layout=['short'],editorial_lane={'morning':'生活、关系或原创虚构故事，不选热点评论','noon':'知识解释、作品赏析或实用内容，不选热点评论','evening':'灵活选题：合适热点或常青题，避免重复今天的切口和情绪'}.get(slot['id'],'按当日内容缺口选择'))
+            daily.TODAY=date;daily.CFG=dict(cfg,count=1,article_layout=['short'],editorial_lane='热点短文：优先娱乐、民生，科技可选但不能包揽三篇；先比较可核实的新进展和真实讨论，再选择事件解释、人物观察或争议分析，避免重复今天的事件与切口。不得用日常随笔或小说补齐自动发布配额')
             daily.ENV=dict(daily.ENV,ZHIHU_PUBLISH_AFTER=slot['publish_at'],ZHIHU_PUBLISH_BEFORE=slot['end'])
             try:
                 daily.run_locked(SimpleNamespace(test_mail=False,generate_only=todo=='prepare'))
