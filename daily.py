@@ -108,6 +108,12 @@ def prepare_article(article):
     a['body'] = '\n'.join(b['text'] for b in a['blocks'])
     return a
 
+def prepared_body_length(article):
+    """Count prose in prepare_article output, excluding its appended citation blocks."""
+    count = len(article['sources']) + 1 if article['sources'] else 0
+    blocks = article['blocks'][:-count] if count else article['blocks']
+    return len(''.join(b['text'] for b in blocks))
+
 def validate_article(a, require_recent=True):
     writing_wiki.validate_plan(a)
     date_match = re.fullmatch(r'\d{4}-\d{2}-\d{2}', a['event_date'])
@@ -264,7 +270,7 @@ def generate():
         validate_article(a)
         if layout and layout[index-1]=='short' and len(''.join(b['text'] for b in a['blocks']))>2500:raise RuntimeError('短文超过2500字，请按短文定位修改')
         final=review_article(a,index)
-        if layout and layout[index-1]=='short' and len(''.join(b['text'] for b in final['blocks']))>3000:raise RuntimeError('审稿后短文过长，停止发布')
+        if layout and layout[index-1]=='short' and prepared_body_length(final)>3000:raise RuntimeError('审稿后短文过长，停止发布')
         reviewed.append(final)
     data['articles'] = articles = reviewed
     data['workflow_version'] = 2

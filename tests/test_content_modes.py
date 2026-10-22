@@ -27,3 +27,12 @@ class ContentModeTests(unittest.TestCase):
  def test_mode_is_part_of_review_fingerprint(self):
   a=self.article('fiction');b=copy.deepcopy(a);b['content_mode']='evergreen'
   self.assertNotEqual(daily.article_fingerprint(a),daily.article_fingerprint(b))
+
+ def test_prepared_length_excludes_only_appended_sources(self):
+  a=self.article('evergreen')
+  a['sources']=[{'title':'source','url':'https://example.org/'+('x'*2000),'date':str(daily.TODAY)}]
+  expected=sum(len(b['text']) for b in a['blocks'])
+  prepared=daily.prepare_article(a)
+  self.assertEqual(daily.prepared_body_length(prepared),expected)
+  a['sources']=[]
+  self.assertEqual(daily.prepared_body_length(daily.prepare_article(a)),expected)
