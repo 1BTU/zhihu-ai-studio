@@ -45,5 +45,10 @@
     "answer_limit": 2,
     "question_limit": 1,
     "publish": false
+  },
+  "challenge": {
+    "enabled": false,
+    "time": "20:30",
+    "url": "https://www.zhihu.com/parker/campaign/2083977679355889635?zh_hide_nav_bar=true"
   }
 }

@@ -93,4 +93,11 @@ def main():
         if settings.get('enabled') and start<=now<start+dt.timedelta(hours=2):
             import operations
             operations.run()
+        # Finish due article work first; challenge must not hold the account across its publication slot.
+        now=dt.datetime.now(ZoneInfo(cfg['timezone']))
+        schedule=read(ROOT/'reports'/str(now.date())/'daily/schedule.json',{})
+        waiting=any(s['status'] not in TERMINAL and now<dt.datetime.fromisoformat(s['end']) for s in schedule.get('slots',[]))
+        if cfg.get('challenge',{}).get('enabled') and not waiting:
+            import challenge
+            challenge.run(cfg)
 if __name__=='__main__':main()
