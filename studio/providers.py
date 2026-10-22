@@ -89,6 +89,35 @@ def tool(name,args,folder):
  raise ValueError('不支持此工具')
 TOOLS=[{'type':'function','function':{'name':n,'description':d,'parameters':{'type':'object','properties':{a:{'type':'string'}},'required':[a],'additionalProperties':False}}} for n,a,d in [('wiki_search','query','检索已通过互动门槛的范文，替代运行wiki.py search'),('read_material','path','读取本任务JSON资料、范文卡或写法页，不得访问其他文件'),('search_web','query','搜索公开网页。结果只是线索，必须fetch_url实际核实'),('fetch_url','url','读取公开HTTPS网页以核实来源')]]
 
+def parse_model_json(content):
+ """Repair only unambiguous serialization mistakes; never change editorial decisions."""
+ clean=re.sub(r'^```(?:json)?\s*|\s*```$','',content.strip())
+ repairs=[]
+ def unique(pairs):
+  value={}
+  for key,item in pairs:
+   if key in value:raise ValueError('重复JSON字段：'+key)
+   value[key]=item
+  return value
+ decoder=json.JSONDecoder(object_pairs_hook=unique)
+ result,end=decoder.raw_decode(clean)
+ tail=clean[end:].strip()
+ if tail:
+  if isinstance(result,dict) and re.fullmatch(r'}{1,3}',tail):
+   repairs.append('移除完整顶层对象之后多余的右花括号')
+  else:raise json.JSONDecodeError('Extra data',clean,end)
+ # A known misplaced article discriminator can be moved without inventing a value.
+ articles=[]
+ if isinstance(result,dict):
+  if isinstance(result.get('article'),dict):articles.append(result['article'])
+  if isinstance(result.get('articles'),list):articles.extend(a for a in result['articles'] if isinstance(a,dict))
+ for article in articles:
+  plan=article.get('writing_plan')
+  if isinstance(plan,dict) and 'content_mode' not in article and plan.get('content_mode') in ('hot','evergreen','fiction'):
+   article['content_mode']=plan.pop('content_mode')
+   repairs.append('将writing_plan中的content_mode原值移至所属article')
+ return result,repairs
+
 def run(choice,prompt,output,schema,emit=lambda *a:None):
  validate(choice);d=load();pid,model=choice.split(':',1);provider=next(x for x in d['providers'] if x['id']==pid)
  output=pathlib.Path(output);folder=output.parent;definition=json.loads(pathlib.Path(schema).read_text());adapter=PublicEvents(emit,output.stem)
@@ -153,10 +182,15 @@ def run(choice,prompt,output,schema,emit=lambda *a:None):
    continue
   if finish=='length':raise RuntimeError('模型输出达到长度上限，未保存不完整文章')
   try:
-   clean=re.sub(r'^```(?:json)?\s*|\s*```$','',content.strip());result=json.loads(clean);jsonschema.validate(result,definition)
+   result,repairs=parse_model_json(content)
+   jsonschema.validate(result,definition)
+   if repairs:
+    output.with_suffix('.normalized-source.txt').write_text(content)
+    output.with_suffix('.normalization.json').write_text(json.dumps({'repairs':repairs,'schema_validated':True},ensure_ascii=False))
   except (ValueError,jsonschema.ValidationError) as exc:
    format_attempts+=1
    output.with_suffix('.invalid.txt').write_text(content)
+   output.with_suffix('.invalid-'+str(format_attempts)+'.txt').write_text(content)
    errors=[]
    def explain(e):
     if getattr(e,'context',None):
@@ -167,7 +201,7 @@ def run(choice,prompt,output,schema,emit=lambda *a:None):
    output.with_suffix('.validation.json').write_text(json.dumps(errors[:12],ensure_ascii=False))
    if format_attempts<=2 and turn<max_turns-1:
     emit('progress',{'key':output.stem+':format:'+str(format_attempts),'phase':'结果整理','text':'正在整理输出格式（'+str(format_attempts)+'/2），保留现有内容，不重新检索或审稿。'})
-    messages.extend([{'role':'assistant','content':content},{'role':'user','content':'只修复JSON格式，不进行新的审稿轮次，不修改已确定的故事。answer仍回答用户原始请求，不向用户解释schema或格式修复过程。具体结构错误：'+json.dumps(errors[:12],ensure_ascii=False)}]);checkpoint('formatting');continue
+    messages.extend([{'role':'assistant','content':content},{'role':'user','content':'只修复下列JSON结构错误，输出且仅输出一个完整JSON对象。保留正文、来源、verdict、issues及changes，不重新检索、不重新审稿、不改为approved。content_mode位于article内，与writing_plan平级；outline须3至7项，可合并相邻提纲但不得删改正文。若存在answer仍回答原始请求。具体结构错误：'+json.dumps(errors[:12],ensure_ascii=False)}]);checkpoint('formatting');continue
    raise RuntimeError('模型输出格式仍不合格，已在2次纠错后停止；原始输出已保留，可重试或切换模型') from None
   checkpoint('completed');output.write_text(json.dumps(result,ensure_ascii=False,indent=2));output.with_suffix('.usage.json').write_text(json.dumps({'model':choice,'usage':usage}));return result
  checkpoint('exhausted');raise RuntimeError('资料整理未完成，已保留检索记录，未强行生成')

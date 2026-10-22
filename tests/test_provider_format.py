@@ -22,4 +22,18 @@ class FormatTests(unittest.TestCase):
   run,root,events=self.run_responses(['bad']*3)
   with self.assertRaisesRegex(RuntimeError,'2次纠错'):run()
   self.assertEqual(self.post.call_count,3);self.assertEqual((root/'out.invalid.txt').read_text(),'bad');self.assertFalse((root/'out.json').exists())
+
+ def test_extra_closer_and_misplaced_mode_preserve_revise(self):
+  value={'verdict':'revise','issues':['还需核实'],'article':{'writing_plan':{'content_mode':'hot'},'blocks':[{'text':'正文保留'}]}}
+  result,repairs=providers.parse_model_json(json.dumps(value)+'}')
+  self.assertEqual(result['verdict'],'revise');self.assertEqual(result['issues'],['还需核实'])
+  self.assertEqual(result['article']['content_mode'],'hot');self.assertEqual(result['article']['blocks'],value['article']['blocks']);self.assertEqual(len(repairs),2)
+ def test_ambiguous_or_truncated_json_is_not_repaired(self):
+  for raw in ['{"answer":"one"}{"answer":"two"}','{"answer":"a","answer":"b"}','{"answer":"incomplete"','{"answer":"ok"} explanation']:
+   with self.subTest(raw=raw),self.assertRaises(ValueError):providers.parse_model_json(raw)
+ def test_normalized_output_still_must_pass_schema(self):
+  run,root,events=self.run_responses(['{"wrong":"x"}}','{"answer":"ok"}}'])
+  self.assertEqual(run(),{'answer':'ok'});self.assertEqual(self.post.call_count,2)
+  self.assertTrue((root/'out.normalization.json').exists());self.assertTrue((root/'out.invalid-1.txt').exists())
+
 if __name__=='__main__':unittest.main()
