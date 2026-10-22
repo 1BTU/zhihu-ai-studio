@@ -1,3 +1,4 @@
+import {assertPublishWindow} from './publish-window.mjs';
 import puppeteer from 'puppeteer';
 import {imageState,verifyImages} from './zhihu-images.mjs';
 import {readFile, writeFile, mkdir, rename} from 'node:fs/promises';
@@ -66,6 +67,7 @@ try {
   if(!verifiedByPublishedEditor) {
   if(draft.published) throw Error('本地记录已发布，但服务器状态不一致；停止重复提交');
   if(buttons.length!==1) throw Error(`可用发布按钮数量异常：${buttons.length}`);
+  assertPublishWindow();
   draft.publishRequestedAt=new Date().toISOString();
   await record(draft);
   await buttons[0].click();

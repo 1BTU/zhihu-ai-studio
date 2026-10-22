@@ -192,9 +192,9 @@ def generate():
     generated_path = RUN/'generation.json'
     cached = json.loads(generated_path.read_text()) if generated_path.exists() else None
     history = []
-    for path in sorted((ROOT/'reports').glob('*/daily/articles.json')):
+    for path in sorted(list((ROOT/'reports').glob('*/daily/articles.json'))+list((ROOT/'reports').glob('*/daily/slots/*/articles.json'))):
         try:
-            if 0 <= (TODAY-dt.date.fromisoformat(path.parents[1].name)).days <= 14:
+            if 0 <= (TODAY-dt.date.fromisoformat(path.relative_to(ROOT/'reports').parts[0])).days <= 14:
                 history.extend({'title':a['title'],'topic_key':a['topic_key']} for a in json.loads(path.read_text())['articles'])
         except (ValueError, KeyError): pass
     # Include publications made through the web conversation and older manual runs.
@@ -227,7 +227,8 @@ def generate():
         if len(reference_cards)<2: raise RuntimeError('可验证互动的写作范文不足2篇，未绕过参考库要求')
         save(RUN/'writing-context.json',{'rules':writing_wiki.POLICY,'approved_cards':reference_cards})
         prompt = (ROOT/'daily-prompt.txt').read_text() + f'\n北京时间今天是 {TODAY}。本次只生成 {CFG["count"]} 篇。本次采集文件：{RUN}/hotspots.json。最近14天历史：{RUN}/history.json。\n本次通过互动门槛的参考卡及规则：{RUN}/writing-context.json。'
-        if CFG.get('article_layout') and CFG['count']==3:prompt+='\n本批次为一篇长文、两篇短文。第一篇先输出1000–1600字的可靠基础稿，选题必须足以支撑万字深度论证或完整故事，后续会独立分节扩写。第二、三篇直接输出1000–1600字完整短文。不要在一次输出中生成三篇长文。'
+        if 'long' in CFG.get('article_layout',[]) and CFG['count']==3:prompt+='\n本批次为一篇长文、两篇短文。第一篇先输出1000–1600字的可靠基础稿，选题必须足以支撑万字深度论证或完整故事，后续会独立分节扩写。第二、三篇直接输出1000–1600字完整短文。不要在一次输出中生成三篇长文。'
+        if CFG.get('article_layout') and all(x=='short' for x in CFG['article_layout']):prompt+='\n本次全部为完整短文，每篇正文1000–1600字，禁止扩写成长篇。'
         report_progress('选题与初稿', 'AI核实来源、检索范文并撰写文章')
         col=selected_daily_column()
         if col:prompt+='\n本次专栏要求（优先遵守定位和人物资料）：'+json.dumps(col,ensure_ascii=False)
@@ -244,7 +245,7 @@ def generate():
     for index,a in enumerate(articles,1):
         col=selected_daily_column()
         if col and col['config'].get('genre')=='fiction':a['genre']='fiction'
-        layout=CFG.get('article_layout',[]) if CFG['count']==3 else []
+        layout=CFG.get('article_layout',[])
         if layout and layout[index-1]=='long':
             import longform
             a=longform.expand(sys.modules[__name__],a,index)
@@ -264,6 +265,9 @@ def main():
     import html
     parser=argparse.ArgumentParser();parser.add_argument('--test-mail',action='store_true');parser.add_argument('--generate-only',action='store_true')
     opts=parser.parse_args()
+    if CFG.get('windows') and not opts.test_mail and not opts.generate_only:
+        import scheduler
+        return scheduler.main()
     with (ROOT/'private/daily.lock').open('w') as lock:
         try: fcntl.flock(lock, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError: print('已有每日任务运行，跳过。'); return

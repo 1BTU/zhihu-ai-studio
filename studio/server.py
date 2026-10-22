@@ -65,6 +65,7 @@ def get_article(aid):
 def ingest():
  """Import only local publication proofs, never arbitrary files or account secrets."""
  records=list((ROOT/'reports').glob('*/daily/draft-*-result.json'))+list((ROOT/'reports').glob('*/iphone-duo-manual/draft-result.json'))
+ records+=list((ROOT/'reports').glob('*/daily/slots/*/draft-*-result.json'))
  records+=list((ROOT/'artifacts').glob('publish-verified.json'))
  for p in records:
   try:
@@ -86,6 +87,23 @@ ON CONFLICT(url) DO UPDATE SET body=CASE WHEN articles.body='' THEN excluded.bod
       row=c.execute('SELECT id FROM articles WHERE url=?',(url,)).fetchone()
       c.execute('INSERT OR IGNORE INTO article_context VALUES(?,NULL,?,NULL,?)',(row['id'],col['id'],col['config'].get('model','')))
   except (ValueError,KeyError,OSError):continue
+
+def read_plans():
+ today=dt.datetime.now(__import__('zoneinfo').ZoneInfo('Asia/Shanghai')).date()
+ result=[]
+ for date in (today,today+dt.timedelta(days=1)):
+  p=ROOT/'reports'/str(date)/'daily/schedule.json'
+  if p.exists():
+   try:result.append(json.loads(p.read_text()))
+   except ValueError:pass
+ return result
+
+def read_operations():
+ result=[]
+ for p in sorted((ROOT/'reports').glob('*/operations/state.json'),reverse=True)[:14]:
+  try:result.append(json.loads(p.read_text()))
+  except ValueError:pass
+ return result
 
 def snapshot():
  ingest()
@@ -120,7 +138,7 @@ def snapshot():
    runs.append(row)
   except ValueError:pass
  cfg=json.loads((ROOT/'daily-config.json').read_text())
- return {**workspace,'event_cursor':event_cursor,'articles':articles,'jobs':jobs,'messages':messages,'meta':metadata,'history':list(reversed(history)),'runs':runs,'schedule':{'time':cfg['time'],'timezone':cfg['timezone'],'count':cfg['count'],'review_max_rounds':cfg['review_max_rounds'],'article_layout':cfg.get('article_layout',[]),'illustrations':cfg.get('illustrations',{})},'updated_at':now()}
+ return {**workspace,'event_cursor':event_cursor,'articles':articles,'jobs':jobs,'messages':messages,'meta':metadata,'history':list(reversed(history)),'runs':runs,'schedule':{'time':cfg['time'],'timezone':cfg['timezone'],'count':cfg['count'],'review_max_rounds':cfg['review_max_rounds'],'windows':cfg.get('windows',[]),'operations':cfg.get('operations',{}),'article_layout':cfg.get('article_layout',[]),'illustrations':cfg.get('illustrations',{})},'plans':read_plans(),'operations_runs':read_operations(),'updated_at':now()}
 
 def enqueue(kind,payload):
  with database() as c:
@@ -357,7 +375,7 @@ class Handler(BaseHTTPRequestHandler):
     if not qr:return self.reply({'error':'二维码尚未就绪'},404)
     return self.reply(qr[-1].read_bytes(),ctype='image/png')
    for_view=path.strip('/')
-   if for_view in ('overview','articles','chat','jobs','columns','settings','feedback'):
+   if for_view in ('overview','articles','chat','jobs','columns','settings','feedback','operations'):
     return self.reply((FILES/'index.html').read_bytes(),ctype='text/html; charset=utf-8')
    allowed={'/':'index.html','/app.js':'app.js','/workspace.js':'workspace.js','/feedback.js':'feedback.js','/style.css':'style.css'}
    if path not in allowed:return self.reply({'error':'没有找到页面'},404)

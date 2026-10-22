@@ -10,4 +10,4 @@ if [[ -f .env ]]; then
 fi
 mkdir -p private/daily-logs
 PYTHON_BIN="${PYTHON_BIN:-$PROJECT_DIR/.venv/bin/python}"
-exec "$PYTHON_BIN" daily.py >> "private/daily-logs/$(date +%F).log" 2>&1
+exec "$PYTHON_BIN" scheduler.py >> "private/daily-logs/$(date +%F).log" 2>&1

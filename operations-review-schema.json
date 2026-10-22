@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "report": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "answer",
+              "question"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "target_url": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "reference_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "url"
+              ]
+            }
+          }
+        },
+        "required": [
+          "kind",
+          "title",
+          "target_url",
+          "body",
+          "reason",
+          "reference_ids",
+          "sources"
+        ]
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "no_content",
+        "reject"
+      ]
+    }
+  },
+  "required": [
+    "report",
+    "items",
+    "verdict"
+  ]
+}
