@@ -127,10 +127,10 @@ def run(config,folder):
  public_sites=[{k:v for k,v in s.items() if k!='candidates'} for s in sites if s['status']!='用途已变更']
  collector.save(collector.wiki.ROOT/'meme-sites-status.json',public_sites)
  candidates=[]
- # Round robin prevents one dictionary from consuming the whole budget.
- for i in range(3):
-  for s in sites:
-   if len(s['candidates'])>i:candidates.append(s['candidates'][i])
+ # Dictionary entries are ingested deterministically; no per-entry model calls.
+ import meme_crawl
+ raw=meme_crawl.run(config.get('raw_meme_limit_per_site',15))
+ state['raw_memes_added']=raw['added'];state['memes_added']+=raw['added'];state['errors'].extend(raw['errors'])
  cutoff=(dt.datetime.now(dt.timezone.utc)-dt.timedelta(days=7)).date().isoformat()
  materials=[]
  for query in config.get('material_queries',['娱乐 文化 热议','生活 消费 热议','网络流行语 新梗']):

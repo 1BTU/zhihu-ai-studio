@@ -76,7 +76,7 @@ def meme_status(card):
 def meme_search(query,limit=4):
  q=tokens(query);hits=[]
  for c in load_memes():
-  if not c.get('sources'):continue
+  if not c.get('sources') or c.get('ingestion_type')=='raw':continue
   text=tokens(' '.join(str(c.get(k,'')) for k in ('name','meaning','usage','avoid')))
   score=sum(text[t] for t in q)
   if score:hits.append({**c,'heat_status':meme_status(c),'score':score})

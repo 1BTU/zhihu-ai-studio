@@ -111,6 +111,7 @@ def merge_memes(source,result,model):
   save(wiki.ROOT/'memes.json',cards)
   out=wiki.ROOT/'wiki/memes';out.mkdir(exist_ok=True)
   for c in cards:
+   if c.get('ingestion_type')=='raw':continue
    text='# '+c['name']+'\n\n'+ '\n\n'.join('**'+label+'**：'+c[key] for key,label in [('meaning','含义'),('origin_boundary','出处与边界'),('usage','适用场景'),('avoid','不宜使用'),('example','自拟例句')])
    text+='\n\n## 来源\n'+ '\n'.join('- ['+s['title']+']('+s['url']+')；发表：'+str(s['published_at'] or '未标明')+'；查阅：'+s['observed_at'] for s in c['sources'])
    (out/(c['id']+'.md')).write_text(text+'\n')
