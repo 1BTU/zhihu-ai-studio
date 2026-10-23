@@ -58,30 +58,59 @@ def fetch(url):
    import subprocess,shutil,os
    result=subprocess.run([os.environ.get('NODE_BIN') or shutil.which('node') or 'node',str(ROOT/'material-browser.mjs'),url],capture_output=True,text=True,timeout=35,check=True)
    page=json.loads(result.stdout);usable_page(page);page['observed_at']=collector.stamp();return page
+def fetch_known(url):
+ # Fixed URLs need reading, not a search request.
+ try:return fetch_html(url if url.startswith('https://') else 'https://'+url[len('http://'):])
+ except (requests.RequestException,ValueError):return fetch(url)
+
 def site_matches(url,seed):
  host=urllib.parse.urlsplit(url).hostname or '';domain=urllib.parse.urlsplit(seed).hostname.removeprefix('www.')
  return host==domain or host.endswith('.'+domain)
 def check_site(seed):
  record=dict(seed,checked_at=collector.stamp(),status='待核实',update_status='持续更新情况未核实',candidates=[])
  try:
-  page=fetch(seed['url']);record.update(status='可访问',page_title=page['title'],retrieval=page.get('retrieval','DeepSeek Fetch'))
+  page=fetch_known(seed['url']);record.update(status='可访问',page_title=page['title'],retrieval=page.get('retrieval','DeepSeek Fetch'))
   if page.get('transport_verified') is False:record.update(status='首页可读 / 详情待核实')
   if re.search(r'配资|炒股|影院|博彩|娱乐城',page['title']):
    record.update(status='用途已变更',update_status='返回内容与梗词典不符，已排除采集');return record
-  links=[r for r in page.get('links',[]) if site_matches(r['url'],seed['url']) and (re.search(r'梗|意思|含义',r['title']) or '/article/' in r['url'])]
+  links=[r for r in page.get('links',[]) if site_matches(r['url'],seed['url']) and (re.search(r'梗|意思|含义',r['title']) or '/article/' in r['url'] or '/doc-view-' in r['url'])]
   for title,url in re.findall(r'\[([^\]]+)\]\((https?://[^\s)]+)\)',page['text']):
    if site_matches(url,seed['url']) and urllib.parse.urlsplit(url).path not in ('','/') and re.search(r'梗|意思|含义',title):links.append({'url':url,'title':title,'date':None})
   record['candidates']=list({r['url']:r for r in links}.values())[:6]
   if not record['candidates'] and re.search(r'梗|网络语|流行语|词典',page['title']):record['candidates']=[{'url':seed['url'],'title':page['title'],'date':None}]
  except Exception as e:record.update(status='抓取失败',error=str(e)[:100])
- try:
-  results=search('site:'+urllib.parse.urlsplit(seed['url']).hostname+' 什么梗 什么意思',3)
-  record['candidates'] += [r for r in results if site_matches(r.get('url',''),seed['url']) and urllib.parse.urlsplit(r['url']).path not in ('','/')]
-  dates=[r['date'][:10] for r in record['candidates'] if r.get('date') and re.match(r'\d{4}-\d{2}-\d{2}',r['date'])]
-  record['latest_indexed_date']=max(dates) if dates else None
-  if dates:record['update_status']='搜索结果标注日期 '+max(dates)+'（未确认站点持续更新）'
- except Exception as e:record['search_error']=str(e)[:100]
+ # Only a failed direct read warrants searching for an alternate accessible page.
+ if record['status']=='抓取失败':
+  try:
+   results=search('site:'+urllib.parse.urlsplit(seed['url']).hostname+' 什么梗 什么意思',3)
+   record['recovery_search_completed']=True
+   for result in results:
+    if not site_matches(result.get('url',''),seed['url']):continue
+    try:
+     recovered=fetch_known(result['url'])
+     if re.search(r'配资|炒股|影院|博彩|娱乐城',recovered['title']):continue
+     record.update(status='词条可读 / 首页不可用',retrieval=recovered.get('retrieval'),candidates=[result]);break
+    except Exception:continue
+  except Exception as e:record['search_error']=type(e).__name__
  return record
+
+def retire_failed_sites(sites):
+ """Retire only after failed recovery on three distinct days; audit privately."""
+ path=ROOT/'private/wiki-ingest/site-health.json';health=collector.read(path,{})
+ today=dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).date().isoformat();removed=set()
+ for site in sites:
+  url=site['url'];entry=health.get(url,{'failed_days':[]})
+  if site['status']=='用途已变更':removed.add(url)
+  elif site['status']=='抓取失败' and site.get('recovery_search_completed'):
+   entry['failed_days']=sorted(set(entry['failed_days']+[today]))[-3:]
+   if len(entry['failed_days'])>=3:removed.add(url)
+  elif site['status']!='抓取失败':entry['failed_days']=[]
+  entry['last_status']=site['status'];entry['removed']=url in removed;health[url]=entry
+ collector.save(path,health)
+ if removed:
+  collector.save(SEEDS,[s for s in collector.read(SEEDS,[]) if s['url'] not in removed])
+ return [s for s in sites if s['url'] not in removed]
+
 
 def run(config,folder):
  folder.mkdir(parents=True,exist_ok=True)
@@ -93,6 +122,7 @@ def run(config,folder):
  seeds=collector.read(SEEDS,[])
  with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:sites=list(pool.map(check_site,seeds))
  collector.save(folder/'site-audit.json',sites)
+ sites=retire_failed_sites(sites)
  state['errors'].extend({'stage':'site','url':s['url'],'error':s['status']} for s in sites if s['status']!='可访问')
  public_sites=[{k:v for k,v in s.items() if k!='candidates'} for s in sites if s['status']!='用途已变更']
  collector.save(collector.wiki.ROOT/'meme-sites-status.json',public_sites)
@@ -115,7 +145,8 @@ def run(config,folder):
   if len(seen)>=limit:break
   seen.add(url)
   try:
-   source=fetch(url);source['published_at']=result.get('date')
+   source=fetch_known(url) if any(site_matches(url,s['url']) for s in seeds) else fetch(url)
+   source['published_at']=result.get('date') or source.get('published_at')
    target=folder/('meme-'+str(len(seen)));target.mkdir()
    summary=collector.summarize(config,target,'meme',source)
    state['memes_added']+=collector.merge_memes(source,summary,config['model'])
