@@ -16,7 +16,7 @@ class MaterialAgentTests(unittest.TestCase):
    with self.assertRaisesRegex(RuntimeError,'HTTP 401'):agent.search('梗')
    self.assertEqual(post.call_count,1)
  def test_fetch_rejects_block_page(self):
-  with patch.object(agent,'call_api',return_value={'content':'验证码'+'x'*120}):
+  with patch.object(agent,'call_api',return_value={'content':'验证码'+'x'*120}),patch.object(agent,'fetch_html',side_effect=ValueError('blocked')):
    with self.assertRaises(ValueError):agent.fetch('https://example.com')
  def test_site_checks_do_not_assert_current_activity(self):
   with patch.object(agent,'fetch',return_value={'title':'词典','text':'释义页面'}),patch.object(agent,'search',return_value=[{'url':'https://moyuoo.com/123','date':'2020-01-01'}]):
@@ -26,4 +26,10 @@ class MaterialAgentTests(unittest.TestCase):
   with patch.object(agent,'fetch',return_value={'title':'正规配资炒股网','text':'广告'}),patch.object(agent,'search') as search:
    result=agent.check_site({'url':'https://ttseed.cn/','name':'梗百科'})
    self.assertEqual(result['status'],'用途已变更');self.assertEqual(result['candidates'],[]);search.assert_not_called()
+ def test_login_widget_is_not_a_block_page(self):
+  self.assertIn('验证码',agent.usable_page({'title':'墨鱼词典','content':'验证码'+'公开词条内容'*200}))
+ def test_fetch_falls_back_without_credentials(self):
+  page={'url':'https://example.com','text':'正文'*100,'title':'词条','retrieval':'服务器直读'}
+  with patch.object(agent,'call_api',side_effect=RuntimeError('HTTP 404')),patch.object(agent,'fetch_html',return_value=page) as fallback:
+   self.assertEqual(agent.fetch('https://example.com'),page);fallback.assert_called_once_with('https://example.com')
 if __name__=='__main__':unittest.main()

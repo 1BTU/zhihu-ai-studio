@@ -23,14 +23,14 @@ document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{view=b.dataset.view;
 
 function renderMeme(c,root){
  const b=el('button',null,'card');b.type='button';b.append(el('div',c.heat_status,'card-top'),el('h3',c.name),el('p',c.meaning,'summary'),el('div','出处 '+c.sources.length+' 条 · 查看用法 ↗','card-bottom'));
- b.onclick=()=>{lastFocus=b;const box=$('#article');box.replaceChildren(el('p',c.heat_status,'article-meta'),el('h2',c.name));for(const [key,label]of [['meaning','含义'],['origin_boundary','出处与边界'],['usage','适用场景'],['avoid','不宜使用'],['example','自拟例句']])box.append(el('h3',label),el('p',c[key]));box.append(el('h3','来源记录'));for(const source of c.sources){box.append(safeLink(source.url,source.title),el('p','发表：'+(source.published_at||'未标明')+' · 查阅：'+time(source.observed_at),'small-note'));}box.append(el('p','总结模型：'+c.analysis_model+'。收录不代表仍在流行，使用前重新核对语境。','small-note'));$('#detail').showModal();$('#detail').scrollTop=0;};root.append(b);
+ b.onclick=()=>{lastFocus=b;const box=$('#article');box.replaceChildren(el('p',c.heat_status,'article-meta'),el('h2',c.name));for(const [key,label]of [['meaning','含义'],['origin_boundary','出处与边界'],['usage','适用场景'],['avoid','不宜使用'],['example','自拟例句']])box.append(el('h3',label),el('p',c[key]));box.append(el('h3','来源记录'));for(const source of c.sources){box.append(safeLink(source.url,source.title),el('p','发表：'+(source.published_at||'未标明')+' · 查阅：'+time(source.observed_at)+(source.retrieval?' · '+source.retrieval:''),'small-note'));}box.append(el('p','总结模型：'+c.analysis_model+'。收录不代表仍在流行，使用前重新核对语境。','small-note'));$('#detail').showModal();$('#detail').scrollTop=0;};root.append(b);
 }
 
 function renderCollected(c,root){
  const b=el('button',null,'card');b.type='button';const site=view==='sites';
  b.append(el('div',site?c.status:((data.daily_materials||{}).date||'')+' · DeepSeek','card-top'),el('h3',c.title),el('p',site?c.update_status:c.background,'summary'),el('div',site?'查看来源站 ↗':'查看资料与写作角度 ↗','card-bottom'));
  b.onclick=()=>{lastFocus=b;const box=$('#article');box.replaceChildren(el('h2',c.title));
- if(site){box.append(safeLink(c.url,'访问网站 ↗'),el('p','来源：'+c.provenance),el('p','最近检查：'+time(c.checked_at)+' · '+c.status),el('p',c.update_status),el('p',c.note));if(c.error)box.append(el('p','抓取结果：'+c.error));}
+ if(site){box.append(safeLink(c.url,'访问网站 ↗'),el('p','来源：'+c.provenance),el('p','最近检查：'+time(c.checked_at)+' · '+c.status),el('p',c.update_status),el('p',c.note),el('p','读取方式：'+(c.retrieval||'DeepSeek Fetch')));if(c.error)box.append(el('p','抓取结果：'+c.error));}
  else {for(const [key,label]of [['background','事件背景'],['angle','可写角度'],['limits','资料边界']])box.append(el('h3',label),el('p',c[key]));box.append(el('h3','实际读取的来源'));for(const source of c.sources||[])box.append(safeLink(source.url,source.title),el('p','发表：'+(source.published_at||'未标明')+' · 读取：'+time(source.observed_at),'small-note'));}
  $('#detail').showModal();$('#detail').scrollTop=0;};root.append(b);
 }

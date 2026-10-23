@@ -102,7 +102,7 @@ def merge_memes(source,result,model):
    if not name or len(name)>60 or len(quote)<20 or quote not in source['text'] or name not in quote:continue
    cid='meme-'+hashlib.sha256(name.casefold().encode()).hexdigest()[:16]
    existing=next((c for c in cards if c['id']==cid),None)
-   evidence={'url':source['url'],'title':source['title'],'published_at':date,'observed_at':observed,'quote':quote}
+   evidence={'url':source['url'],'title':source['title'],'published_at':date,'observed_at':observed,'quote':quote,'retrieval':source.get('retrieval'),'transport_verified':source.get('transport_verified',True)}
    if existing and any(s['url']==source['url'] for s in existing['sources']):continue
    card=dict(item,id=cid,title=name,analysis_model=model,updated_at=observed,sources=[evidence],tags=['网络表达'])
    if existing:

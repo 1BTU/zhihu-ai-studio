@@ -15,24 +15,60 @@ def call_api(kind,payload):
   time.sleep(2)
 
 def search(query,count=3):return call_api('search',{'query':query[:128],'count':count,'need_content':True}).get('results',[])
+def usable_page(page):
+ text=page.get('text',page.get('content',''))
+ title=page.get('title','')
+ if len(text)<100 or re.search(r'404 Not Found|503 Service|502 Bad Gateway',title,re.I):raise ValueError('No usable article text')
+ if re.search(r'域名出售|domain (?:is )?for sale|Checking your browser|安全验证|人机验证',title+' '+text[:150],re.I):raise ValueError('Unavailable content')
+ # A login widget mentioning 验证码 is not itself an access challenge.
+ if len(text)<1000 and '验证码' in text and not re.search(r'梗|词典|流行语',title):raise ValueError('Unavailable content')
+ return text
+
+def fetch_html(url):
+ from bs4 import BeautifulSoup
+ for _ in range(4):
+  collector.providers.public_url(url)
+  with requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=(10,15),allow_redirects=False,stream=True) as response:
+   if response.status_code in (301,302,303,307,308):url=urllib.parse.urljoin(url,response.headers['Location']);continue
+   response.raise_for_status()
+   if 'text/html' not in response.headers.get('Content-Type',''):raise ValueError('Not an HTML page')
+   raw=b''
+   for chunk in response.iter_content(16384):
+    raw+=chunk
+    if len(raw)>1500000:raise ValueError('Page too large')
+  soup=BeautifulSoup(raw,'html.parser');title=soup.title.get_text(' ',strip=True) if soup.title else ''
+  links=[{'title':a.get_text(' ',strip=True),'url':urllib.parse.urljoin(url,a['href']),'date':None} for a in soup.select('a[href]') if a.get_text(strip=True)]
+  meta=soup.select_one('meta[property="article:published_time"],meta[name="publishdate"]')
+  for node in soup(['script','style','nav','footer','header','form']):node.decompose()
+  body=soup.select_one('article') or soup.select_one('main') or soup
+  page={'url':url,'title':title,'text':body.get_text('\n',strip=True)[:50000],'links':links[:200],'published_at':meta.get('content') if meta else None,'retrieval':'服务器直读','observed_at':collector.stamp()}
+  usable_page(page);return page
+ raise ValueError('Too many redirects')
+
 def fetch(url):
  u=urllib.parse.urlsplit(url)
  if u.scheme not in ('http','https') or not u.hostname or u.username or u.password:raise ValueError('Invalid public source')
- page=call_api('fetch',{'url':url})
- text=page.get('content','')
- if len(text)<100:raise ValueError('No usable article text')
- if re.search(r'域名出售|domain (?:is )?for sale|验证码|Checking your browser',text[:500],re.I):raise ValueError('Unavailable content')
- return {'url':url,'title':page.get('title') or u.hostname,'text':text[:50000],'observed_at':collector.stamp()}
+ try:
+  page=call_api('fetch',{'url':url});text=usable_page(page)
+  return {'url':url,'title':page.get('title') or u.hostname,'text':text[:50000],'retrieval':'DeepSeek Fetch','observed_at':collector.stamp()}
+ except (requests.RequestException,RuntimeError,ValueError):
+  try:return fetch_html(url if u.scheme=='https' else 'https://'+url[len('http://'):])
+  except (requests.RequestException,ValueError):
+   if u.hostname!='yougengbaike.com':raise
+   import subprocess,shutil,os
+   result=subprocess.run([os.environ.get('NODE_BIN') or shutil.which('node') or 'node',str(ROOT/'material-browser.mjs'),url],capture_output=True,text=True,timeout=35,check=True)
+   page=json.loads(result.stdout);usable_page(page);page['observed_at']=collector.stamp();return page
 def site_matches(url,seed):
  host=urllib.parse.urlsplit(url).hostname or '';domain=urllib.parse.urlsplit(seed).hostname.removeprefix('www.')
  return host==domain or host.endswith('.'+domain)
 def check_site(seed):
  record=dict(seed,checked_at=collector.stamp(),status='待核实',update_status='持续更新情况未核实',candidates=[])
  try:
-  page=fetch(seed['url']);record.update(status='可访问',page_title=page['title'])
+  page=fetch(seed['url']);record.update(status='可访问',page_title=page['title'],retrieval=page.get('retrieval','DeepSeek Fetch'))
+  if page.get('transport_verified') is False:record.update(status='首页可读 / 详情待核实')
   if re.search(r'配资|炒股|影院|博彩|娱乐城',page['title']):
    record.update(status='用途已变更',update_status='返回内容与梗词典不符，已排除采集');return record
-  links=[]
+  links=[r for r in page.get('links',[]) if site_matches(r['url'],seed['url']) and (re.search(r'梗|意思|含义',r['title']) or '/article/' in r['url'])]
   for title,url in re.findall(r'\[([^\]]+)\]\((https?://[^\s)]+)\)',page['text']):
    if site_matches(url,seed['url']) and urllib.parse.urlsplit(url).path not in ('','/') and re.search(r'梗|意思|含义',title):links.append({'url':url,'title':title,'date':None})
   record['candidates']=list({r['url']:r for r in links}.values())[:6]
@@ -58,7 +94,7 @@ def run(config,folder):
  with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:sites=list(pool.map(check_site,seeds))
  collector.save(folder/'site-audit.json',sites)
  state['errors'].extend({'stage':'site','url':s['url'],'error':s['status']} for s in sites if s['status']!='可访问')
- public_sites=[{k:v for k,v in s.items() if k!='candidates'} for s in sites]
+ public_sites=[{k:v for k,v in s.items() if k!='candidates'} for s in sites if s['status']!='用途已变更']
  collector.save(collector.wiki.ROOT/'meme-sites-status.json',public_sites)
  candidates=[]
  # Round robin prevents one dictionary from consuming the whole budget.
