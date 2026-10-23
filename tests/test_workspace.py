@@ -53,7 +53,7 @@ class WorkspaceTests(unittest.TestCase):
    token=s.auth.login('yc',password,'test');headers={'Cookie':'lc_session='+token}
    self.assertTrue(s.auth.valid(headers));self.assertIn('HttpOnly',s.auth.cookie(token));s.auth.logout(headers);self.assertFalse(s.auth.valid(headers))
  def test_fiction_requires_label_and_hash_covers_genre(self):
-  a={'event_date':str(s.daily.TODAY),'genre':'fiction','blocks':[{'text':'故事。'*400}],'sources':[]}
+  a={'event_date':str(s.daily.TODAY),'genre':'fiction','blocks':[{'type':'paragraph','text':'故事。'*400}],'sources':[]}
   with mock.patch.object(s.daily.writing_wiki,'validate_plan'):
    with self.assertRaisesRegex(RuntimeError,'虚构'):s.daily.validate_article(a)
    a['blocks'][0]['text']='原创虚构。'+a['blocks'][0]['text'];s.daily.validate_article(a)

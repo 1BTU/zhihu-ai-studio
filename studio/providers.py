@@ -195,6 +195,8 @@ def run(choice,prompt,output,schema,emit=lambda *a:None,research=True):
   try:
    result,repairs=parse_model_json(content)
    jsonschema.validate(result,definition)
+   from article_format import validate_result
+   validate_result(result)
    if repairs:
     output.with_suffix('.normalized-source.txt').write_text(content)
     output.with_suffix('.normalization.json').write_text(json.dumps({'repairs':repairs,'schema_validated':True},ensure_ascii=False))

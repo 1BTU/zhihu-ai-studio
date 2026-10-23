@@ -33,7 +33,7 @@ class StudioTests(unittest.TestCase):
   date=studio.content_time('发布于 10-21 15:45','fallback')
   self.assertTrue(date.endswith('07:45:00+00:00'));self.assertEqual(studio.content_time('未知','fallback'),'fallback')
  def test_evergreen_valid_but_daily_still_requires_fresh_event(self):
-  a={'event_date':'2020-01-01','blocks':[{'text':'具体内容。'*250}],'sources':[{'url':'https://example.com/a'},{'url':'https://example.com/b'}]}
+  a={'event_date':'2020-01-01','blocks':[{'type':'paragraph','text':'具体内容。'*250}],'sources':[{'url':'https://example.com/a'},{'url':'https://example.com/b'}]}
   with mock.patch.object(studio.daily.writing_wiki,'validate_plan'):
    studio.daily.validate_article(a,require_recent=False)
    with self.assertRaisesRegex(RuntimeError,'日期'):studio.daily.validate_article(a)

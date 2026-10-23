@@ -42,7 +42,7 @@ def article(db,aid):
  if not found:return None
  row=found[0];data=parsed(row);blocks=[]
  for block in data.get('blocks',[]):
-  if isinstance(block,dict) and isinstance(block.get('text'),str):blocks.append({'type':'heading' if block.get('type')=='heading' else 'paragraph','text':block['text']})
+  if isinstance(block,dict) and isinstance(block.get('text'),str):blocks.append({'type':block.get('type') if block.get('type') in ('heading','quote','bullet','ordered') else 'paragraph','text':block['text'],**({'emphasis':block['emphasis']} if isinstance(block.get('emphasis'),list) and all(isinstance(x,str) for x in block['emphasis']) else {})})
  if not blocks:blocks=[{'type':'paragraph','text':s} for s in row['body'].split('\n') if s.strip()]
  return {**brief(row),'blocks':blocks,'images':media(row)}
 

@@ -1,3 +1,4 @@
+import {hasRich,pasteBlocks,verifyRich} from './zhihu-richtext.mjs';
 import puppeteer from 'puppeteer';import fs from 'node:fs/promises';import path from 'node:path';import {imageState,verifyImages} from './zhihu-images.mjs';
 const root=path.resolve('.'),source=process.argv[2],article=JSON.parse(await fs.readFile(source,'utf8'));
 const recordPath=process.env.ZHIHU_RESULT_PATH||path.join(path.dirname(source),'draft-result.json');const record=async value=>{await fs.writeFile(recordPath+'.tmp',JSON.stringify(value,null,2),{mode:0o600});await fs.rename(recordPath+'.tmp',recordPath)};
@@ -29,12 +30,14 @@ try{
     // Move out of the atomic image into the trailing editable paragraph.
     await p.focus('[contenteditable=true]');await p.keyboard.down('Control');await p.keyboard.press('End');await p.keyboard.up('Control');await p.keyboard.press('ArrowDown');
    }
-   if(i<article.blocks.length){const block=article.blocks[i];if(block.type==='heading'){await p.keyboard.type('##');await p.keyboard.press('Space')}if(block.text)await p.keyboard.sendCharacter(block.text)}
+   if(hasRich(article)&&i<article.blocks.length){let end=i+1;while(end<article.blocks.length&&!article.illustrations.some(im=>im.before_block===end))end++;await pasteBlocks(p,article.blocks.slice(i,end));i=end-1;}
+   else if(i<article.blocks.length){const block=article.blocks[i];if(block.type==='heading'){await p.keyboard.type('##');await p.keyboard.press('Space')}if(block.text)await p.keyboard.sendCharacter(block.text)}
    if(i%50===0)console.log('Written blocks',i,'/',article.blocks.length);
   }
   await p.click('textarea[placeholder*="请输入标题"]');await new Promise(r=>setTimeout(r,6000));
  }
  await p.reload({waitUntil:'networkidle2',timeout:60000});await p.waitForSelector('[contenteditable=true]');await p.waitForFunction(()=>[...document.querySelector('[contenteditable=true]').querySelectorAll('img')].every(x=>{x.loading='eager';return x.complete&&x.naturalWidth}));
  const state=await imageState(p);await fs.writeFile(path.join(path.dirname(recordPath),'editor-state.json'),JSON.stringify(state),{mode:0o600});const images=verifyImages(state,article,prior?.imageSources);const title=await p.$eval('textarea[placeholder*="请输入标题"]',n=>n.value);if(title!==article.title)throw Error('标题保存不一致');
- const result={saved:true,published:false,title,url:p.url(),verifiedByReload:true,imageSources:images,imageCount:images.length};await record(result);await p.screenshot({path:path.join(path.dirname(recordPath),'image-draft-verified.png')});console.log(JSON.stringify(result));
+ const richText=await verifyRich(p,article);
+ const result={richText,saved:true,published:false,title,url:p.url(),verifiedByReload:true,imageSources:images,imageCount:images.length};await record(result);await p.screenshot({path:path.join(path.dirname(recordPath),'image-draft-verified.png')});console.log(JSON.stringify(result));
 }catch(e){await p.screenshot({path:path.join(path.dirname(recordPath),'image-draft-error.png')}).catch(()=>{});await fs.writeFile(path.join(path.dirname(recordPath),'editor-state.json'),JSON.stringify(await imageState(p)),{mode:0o600}).catch(()=>{});console.error(e.message,draftUrl||p.url());process.exitCode=1}finally{await b.close()}

@@ -1,3 +1,4 @@
+import {verifyRich} from './zhihu-richtext.mjs';
 import {assertPublishWindow} from './publish-window.mjs';
 import puppeteer from 'puppeteer';
 import {imageState,verifyImages} from './zhihu-images.mjs';
@@ -54,6 +55,7 @@ try {
   const content=await page.evaluate(()=>({title:document.querySelector('textarea[placeholder*="请输入标题"]').value,body:document.querySelector('[contenteditable="true"]')?.innerText}));
   if(article.illustrations?.length)content.body=(await imageState(page)).text;
   if(content.title!==article.title || content.body?.replace(/\s+/gu,'')!==article.body.replace(/\s+/gu,'')) throw Error('草稿内容与本地文章不一致，停止发布');
+  await verifyRich(page,article);
   const buttons=[];
   let updateButton=false;
   for(const button of await page.$$('button')) {

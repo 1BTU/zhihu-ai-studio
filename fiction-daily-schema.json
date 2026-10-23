@@ -48,11 +48,24 @@
                   "type": "string",
                   "enum": [
                     "paragraph",
-                    "heading"
+                    "heading",
+                    "quote",
+                    "bullet",
+                    "ordered"
                   ]
                 },
                 "text": {
                   "type": "string"
+                },
+                "emphasis": {
+                  "type": "array",
+                  "maxItems": 3,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
                 }
               },
               "required": [

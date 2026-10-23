@@ -115,6 +115,8 @@ def prepared_body_length(article):
     return len(''.join(b['text'] for b in blocks))
 
 def validate_article(a, require_recent=True):
+    from article_format import validate_blocks
+    validate_blocks(a["blocks"])
     writing_wiki.validate_plan(a)
     date_match = re.fullmatch(r'\d{4}-\d{2}-\d{2}', a['event_date'])
     if not date_match: raise RuntimeError('选题日期格式不合要求')

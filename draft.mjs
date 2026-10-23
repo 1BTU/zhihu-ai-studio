@@ -1,3 +1,4 @@
+import {hasRich,pasteBlocks,verifyRich} from './zhihu-richtext.mjs';
 import puppeteer from 'puppeteer';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -37,6 +38,8 @@ try {
   await page.locator(titleSelector).fill(article.title);
   await page.click(bodySelector);
   const lines = article.blocks || article.body.replace(/\r\n/g, '\n').split('\n').map(text => ({type:'paragraph', text}));
+  if(hasRich(article))await pasteBlocks(page,lines);
+  else {
   for (let i = 0; i < lines.length; i++) {
     if (await page.evaluate(() => document.body.innerText.includes('绑定手机号后'))) throw new Error('知乎要求绑定或验证手机号，请先在知乎 App 中完成账号验证。');
     if (i) await page.keyboard.press('Enter');
@@ -46,6 +49,7 @@ try {
       await page.keyboard.press('Space');
     }
     if (block.text) await page.keyboard.sendCharacter(block.text);
+  }
   }
   await page.click(titleSelector);
   // Wait for Zhihu to allocate a draft URL, then reload to verify server persistence.
@@ -58,8 +62,9 @@ try {
   await page.waitForFunction((s, title) => document.querySelector(s)?.value === title, {timeout: 30000}, titleSelector, article.title);
   const saved = await page.evaluate((t, b) => ({title: document.querySelector(t).value, body: document.querySelector(b)?.innerText || ''}), titleSelector, bodySelector);
   if (normalized(saved.body) !== normalized(article.body)) throw new Error('重载后正文校验失败，不能确认草稿完整保存。');
+  const richText=await verifyRich(page,article);
   await page.screenshot({path: path.join(artifacts, 'draft-saved.png'), fullPage: true});
-  const result = {saved: true, published: false, title: saved.title, url: draftUrl, verifiedByReload: true};
+  const result = {saved: true, published: false, title: saved.title, url: draftUrl, verifiedByReload: true,richText};
   await writeFile(process.env.ZHIHU_RESULT_PATH || path.join(artifacts, 'draft-result.json'), JSON.stringify(result, null, 2), {mode: 0o600});
   console.log(JSON.stringify(result));
 } catch (error) {

@@ -348,6 +348,7 @@ class Handler(BaseHTTPRequestHandler):
  def do_GET(self):
   try:
    path=urlparse(self.path).path
+   if path=='/article-format.js':return self.reply((FILES/'article-format.js').read_bytes(),ctype='text/javascript; charset=utf-8')
    if path in ('/guest','/guest/','/guest.css','/guest.js'):
     name={'/guest':'guest.html','/guest/':'guest.html','/guest.css':'guest.css','/guest.js':'guest.js'}[path]
     return self.reply((FILES/name).read_bytes(),ctype=mimetypes.guess_type(name)[0]+'; charset=utf-8')

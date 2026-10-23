@@ -2,7 +2,7 @@
 import copy,json,re,hashlib
 
 def words(article):
- return len(re.findall(r'[\u3400-\u9fff]', ''.join(b['text'] for b in article['blocks'] if b['type']=='paragraph')))
+ return len(re.findall(r'[\u3400-\u9fff]', ''.join(b['text'] for b in article['blocks'] if b['type']!='heading')))
 
 def schema_file(d,name,definition):
  p=d.RUN/name;d.save(p,definition);return p
@@ -11,7 +11,8 @@ def expand(d,article,index,runner=None):
  run=runner or d.agent
  folder=d.RUN
  seed=folder/f'long-{index}-seed.json';d.save(seed,article)
- blocks={'type':'array','minItems':1,'items':{'type':'object','additionalProperties':False,'properties':{'type':{'type':'string','enum':['paragraph','heading']},'text':{'type':'string'}},'required':['type','text']}}
+ from article_format import BLOCK_SCHEMA
+ blocks={'type':'array','minItems':1,'items':BLOCK_SCHEMA}
  section_schema=schema_file(d,'long-section-schema.json',{'type':'object','additionalProperties':False,'properties':{'blocks':blocks},'required':['blocks']})
  plan_schema=schema_file(d,'long-plan-schema.json',{'type':'object','additionalProperties':False,'properties':{'sections':{'type':'array','minItems':6,'maxItems':8,'items':{'type':'object','additionalProperties':False,'properties':{'title':{'type':'string'},'purpose':{'type':'string'},'facts':{'type':'string'}},'required':['title','purpose','facts']}}},'required':['sections']})
  identity=hashlib.sha256(json.dumps(article,ensure_ascii=False,sort_keys=True).encode()).hexdigest()
@@ -37,8 +38,9 @@ def expand(d,article,index,runner=None):
  return result
 
 def review(d,article,index,require_recent=True,runner=None):
+ from article_format import BLOCK_SCHEMA,validate_blocks
  run=runner or d.agent;current=copy.deepcopy(article)
- definition={'type':'object','additionalProperties':False,'properties':{'verdict':{'type':'string','enum':['approved','revise','reject']},'issues':{'type':'array','items':{'type':'string'}},'changes':{'type':'array','items':{'type':'object','additionalProperties':False,'properties':{'index':{'type':'integer','minimum':0},'original':{'type':'string'},'text':{'type':'string'}},'required':['index','original','text']}}},'required':['verdict','issues','changes']}
+ definition={'type':'object','additionalProperties':False,'properties':{'verdict':{'type':'string','enum':['approved','revise','reject']},'issues':{'type':'array','items':{'type':'string'}},'changes':{'type':'array','items':{'type':'object','additionalProperties':False,'properties':{'index':{'type':'integer','minimum':0},'original':{'type':'string'},'text':{'type':'string'},'emphasis':BLOCK_SCHEMA['properties']['emphasis']},'required':['index','original','text']}}},'required':['verdict','issues','changes']}
  schema=schema_file(d,'long-review-schema.json',definition)
  for round_no in range(1,d.CFG['review_max_rounds']+1):
   d.report_progress('长文整体审稿',f'第{index}篇 · 第{round_no}轮 · {words(current)}汉字')
@@ -57,6 +59,8 @@ def review(d,article,index,require_recent=True,runner=None):
    if n in seen or not 0<=n<len(current['blocks']) or not change['text'].strip():raise RuntimeError('长文审稿修改索引无效')
    if change.get('original')!=current['blocks'][n]['text']:raise RuntimeError('长文审稿原文与段落位置不匹配，未应用错位修改')
    seen.add(n);current['blocks'][n]['text']=change['text']
+   if 'emphasis' in change:current['blocks'][n]['emphasis']=change['emphasis']
+   validate_blocks([current['blocks'][n]])
   d.validate_article(current,require_recent)
   if words(current)<10000:raise RuntimeError('审稿把长文缩短至10000字以下，停止发布')
   if value['verdict']=='approved' and not value['issues']:
