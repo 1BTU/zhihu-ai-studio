@@ -78,6 +78,7 @@ def tool(name,args,folder):
   rel=pathlib.Path(args['path'])
   candidates=[rel.resolve()] if rel.is_absolute() else [(base/rel).resolve() for base in (folder,ROOT,ROOT/'writing-wiki')]
   allowed={x.resolve() for x in folder.glob('*.json') if x.name not in ('models.json','auth.json') and not x.name.endswith('.research.json')}
+  allowed.add((ROOT/'writing-wiki/daily-materials.json').resolve())
   allowed.update(x.resolve() for x in (ROOT/'writing-wiki/wiki').rglob('*.md'));allowed.add((ROOT/'writing-wiki/README.md').resolve())
   allowed.update([runtime.SKILLS/'news-aggregator-skill/SKILL.md',runtime.SKILLS/'zhihu-converter/SKILL.md'])
   allowed.update((ROOT/'skills/zhihu-converter'/name).resolve() for name in ('SKILL.md','references/content-profiles.md','references/platform-and-review.md','references/sources.md','references/audience-discussion.md','references/editorial-diversity.md'))

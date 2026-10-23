@@ -32,6 +32,12 @@ data['collection']={k:collection.get(k) for k in ('status','model','started_at',
 config_path=root/'wiki-collect-config.json'
 config=json.loads(config_path.read_text()) if config_path.exists() else {}
 data['collection']['schedule']={k:config.get(k) for k in ('enabled','time','timezone','model','article_limit')}
+for key,filename in [('meme_sites','meme-sites-status.json'),('daily_materials','daily-materials.json')]:
+    path=wiki.ROOT/filename
+    data[key]=json.loads(path.read_text()) if path.exists() else ([] if key=='meme_sites' else {})
+agent_path=wiki.ROOT/'material-agent-status.json'
+agent=json.loads(agent_path.read_text()) if agent_path.exists() else {}
+data['material_agent']={k:agent.get(k) for k in ('agent','model','tools','status','started_at','finished_at','sites_checked','materials_added','memes_added')}
 for name in ('index.html','app.js','style.css'):
     source=root/'server-site'/name;dest=out/name
     if not dest.exists() or source.read_bytes()!=dest.read_bytes():

@@ -25,3 +25,8 @@ writing-wiki/.catalog.lock
 writing-wiki/memes.json
 writing-wiki/collection-status.json
 writing-wiki/wiki/memes/
+
+writing-wiki/meme-sites-status.json
+writing-wiki/daily-materials.json
+writing-wiki/material-agent-status.json
+writing-wiki/wiki/materials/
