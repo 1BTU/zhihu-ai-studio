@@ -182,6 +182,33 @@ def validate_review(article):
     if expected != review.get('fingerprint') or expected != article_fingerprint(article):
         raise RuntimeError('成稿与审核版本不一致，停止发布')
 
+def failure_notice(state,error):
+    """Distinguish remote drafts from local manuscripts in failure notifications."""
+    import html
+    local=[];stage='本地初稿，尚未确认通过审核'
+    for filename in ('articles.json','generation.json'):
+        path=RUN/filename
+        if not path.exists():continue
+        try:
+            value=json.loads(path.read_text())
+            local=[a for a in value.get('articles',[]) if isinstance(a,dict) and isinstance(a.get('title'),str) and isinstance(a.get('blocks'),list) and any(isinstance(b,dict) and isinstance(b.get('text'),str) and b['text'].strip() for b in a['blocks'])]
+            if local:
+                if filename=='articles.json':stage='本地成稿，发布前仍须核对审核凭证'
+                break
+        except (ValueError,TypeError,AttributeError):continue
+    files=[p for p in [RUN/'知乎每日文章.md',RUN/'hotspots-report.md'] if p.exists()]
+    if local and not (RUN/'知乎每日文章.md').exists():
+        draft=RUN/'本地初稿-未发布.md'
+        lines=['# '+stage,'此附件不是发布成功凭证；内容与审核状态以工作台为准。']
+        for article in local:
+            lines.append('## '+article['title'])
+            lines.extend(b['text'] for b in article['blocks'] if isinstance(b,dict) and isinstance(b.get('text'),str))
+        draft.write_text('\n\n'.join(lines)+'\n');files.append(draft)
+    published=sum(a.get('status')=='published' for a in state.get('articles',[]))
+    saved=sum(a.get('status')=='saved' for a in state.get('articles',[]))
+    body='<p>本次任务未全部完成：</p><p>'+html.escape(str(error))+'</p><p>已确认提交发布：'+str(published)+'篇；已保存至知乎且待发布：'+str(saved)+'篇；本地已有稿件：'+str(len(local))+'篇（'+stage+'）。</p><p>任务时段：'+html.escape(RUN.name)+'。此通知记录失败当时的状态，后续恢复结果请以工作台为准。可用稿件随附件发送。</p>'
+    return body,files
+
 def completed_for_today(state):
     """A day already completed at the old quota must not publish again."""
     return bool(state.get('notified') and bool(state['articles']) and
@@ -394,8 +421,8 @@ def run_locked(opts):
         state.update(error=str(exc),failed_at=dt.datetime.now(ZoneInfo(CFG['timezone'])).isoformat());save(state_path,state)
         traceback.print_exc()
         try:
-            files=[p for p in [RUN/'知乎每日文章.md',RUN/'hotspots-report.md'] if p.exists()]
-            email(f'知乎每日写作 {TODAY}：需要处理', '<p>本次任务未全部完成：</p><p>'+html.escape(str(exc))+'</p><p>已确认提交发布：'+str(sum(a['status']=='published' for a in state['articles']))+'篇；已保存且待发布：'+str(sum(a['status']=='saved' for a in state['articles']))+'篇。本地成稿如已生成则随附件发送。</p>',files)
+            body,files=failure_notice(state,exc)
+            email(f'知乎每日写作 {TODAY}：需要处理',body,files)
         except Exception: traceback.print_exc()
         raise
 

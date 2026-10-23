@@ -206,13 +206,23 @@ def run(choice,prompt,output,schema,emit=lambda *a:None,research=True):
    def explain(e):
     if getattr(e,'context',None):
      for child in e.context:explain(child)
-    else:errors.append({'path':'/'.join(map(str,getattr(e,'absolute_path',[]))),'rule':getattr(e,'validator','JSON syntax'),'expected':str(getattr(e,'validator_value','合法JSON'))[:250]})
-   explain(exc)
-   if isinstance(exc,json.JSONDecodeError):errors[0].update(message=exc.msg,line=exc.lineno,column=exc.colno)
-   output.with_suffix('.validation.json').write_text(json.dumps(errors[:12],ensure_ascii=False))
+    else:
+     item={'path':'/'.join(map(str,getattr(e,'absolute_path',[]))) or '$','rule':getattr(e,'validator','JSON syntax'),'expected':str(getattr(e,'validator_value','合法JSON'))[:250]}
+     if getattr(e,'validator',None)=='required' and isinstance(e.instance,dict):item['missing']=[k for k in e.validator_value if k not in e.instance]
+     if isinstance(e,json.JSONDecodeError):item.update(message=e.msg,line=e.lineno,column=e.colno)
+     elif not isinstance(e,jsonschema.ValidationError):item['message']=str(e)[:250]
+     errors.append(item)
+   if isinstance(exc,jsonschema.ValidationError):
+    for problem in jsonschema.validators.validator_for(definition)(definition).iter_errors(result):explain(problem)
+   else:explain(exc)
+   diagnostics=json.dumps(errors[:12],ensure_ascii=False)
+   output.with_suffix('.validation.json').write_text(diagnostics)
+   output.with_suffix('.validation-'+str(format_attempts)+'.json').write_text(diagnostics)
    if format_attempts<=2 and turn<max_turns-1:
     emit('progress',{'key':output.stem+':format:'+str(format_attempts),'phase':'结果整理','text':'正在整理输出格式（'+str(format_attempts)+'/2），保留现有内容，不重新检索或审稿。'})
-    messages.extend([{'role':'assistant','content':content},{'role':'user','content':'只修复下列JSON结构错误，输出且仅输出一个完整JSON对象。保留正文、来源、verdict、issues及changes，不重新检索、不重新审稿、不改为approved。content_mode位于article内，与writing_plan平级；outline须3至7项，可合并相邻提纲但不得删改正文。若存在answer仍回答原始请求。具体结构错误：'+json.dumps(errors[:12],ensure_ascii=False)}]);checkpoint('formatting');continue
-   raise RuntimeError('模型输出格式仍不合格，已在2次纠错后停止；原始输出已保留，可重试或切换模型') from None
+    messages.extend([{'role':'assistant','content':content},{'role':'user','content':'只修复下列JSON结构错误，输出且仅输出一个完整JSON对象。必须返回schema要求的所有字段；若缺少article，必须完整返回修订后article对象及正文，不能只返回审稿结论或修改说明，不能用输入旧稿冒充已修改的稿件。保留正文、来源、verdict、issues及changes，不重新检索、不重新审稿、不改为approved。content_mode位于article内，与writing_plan平级；outline须3至7项，可合并相邻提纲但不得删改正文。若存在answer仍回答原始请求。具体结构错误：'+json.dumps(errors[:12],ensure_ascii=False)}]);checkpoint('formatting');continue
+   checkpoint('format_failed')
+   detail='；'.join((e['path']+' 缺少字段 '+','.join(e['missing'])) if e.get('missing') else (e['path']+' '+e['rule']) for e in errors[:3])
+   raise RuntimeError('模型输出格式仍不合格，已在2次纠错后停止；原始输出已保留，可重试或切换模型。具体问题：'+detail) from None
   checkpoint('completed');output.write_text(json.dumps(result,ensure_ascii=False,indent=2));output.with_suffix('.usage.json').write_text(json.dumps({'model':choice,'usage':usage}));return result
  checkpoint('exhausted');raise RuntimeError('资料整理未完成，已保留检索记录，未强行生成')

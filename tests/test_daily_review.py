@@ -69,4 +69,15 @@ class DailyReviewTests(unittest.TestCase):
    daily.main()
   auth.assert_not_called();email.assert_not_called();generate.assert_not_called()
 
+ def test_failure_notice_preserves_local_unreviewed_draft(self):
+  daily.save(self.run/'generation.json',{'articles':[self.article]})
+  body,files=daily.failure_notice({'articles':[]},'模型格式错误')
+  self.assertIn('本地已有稿件：1篇',body);self.assertIn('尚未确认通过审核',body)
+  self.assertIn('已确认提交发布：0篇',body)
+  self.assertTrue(any(p.name=='本地初稿-未发布.md' for p in files))
+ def test_failure_notice_handles_corrupt_local_file(self):
+  (self.run/'generation.json').write_text('{broken')
+  body,files=daily.failure_notice({'articles':[]},'<error>')
+  self.assertIn('本地已有稿件：0篇',body);self.assertIn('&lt;error&gt;',body)
+
 if __name__=='__main__':unittest.main()

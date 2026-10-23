@@ -44,4 +44,11 @@ class FormatTests(unittest.TestCase):
   self.assertEqual(run(),{'answer':'ok'});self.assertEqual(self.post.call_count,2)
   self.assertTrue((root/'out.normalization.json').exists());self.assertTrue((root/'out.invalid-1.txt').exists())
 
+ def test_missing_field_diagnostics_and_failure_checkpoint(self):
+  run,root,events=self.run_responses(['{}']*3)
+  with self.assertRaisesRegex(RuntimeError,'缺少字段 answer'):run()
+  self.assertEqual(json.loads((root/'out.validation-1.json').read_text())[0]['missing'],['answer'])
+  self.assertTrue((root/'out.validation-3.json').exists())
+  self.assertEqual(json.loads((root/'out.research.json').read_text())['status'],'format_failed')
+
 if __name__=='__main__':unittest.main()
